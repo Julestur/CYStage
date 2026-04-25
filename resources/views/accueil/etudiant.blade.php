@@ -42,67 +42,158 @@
     {{-- Barre latérale --}}
     <div id="barreLatérale">
         <div id="contenuBarreLat">
-            <span onclick="fermerBarreLat()" style="cursor:pointer; float:right; font-size:2rem;">&times;</span>
-            <h2 id="titre"></h2><br><br>
+            
+            <span onclick="fermerBarreLat()" style="cursor:pointer; float:right; font-size:2rem;"> &times; </span>
+        
+            <h2 id="titre"></h2> <br><br>
+
+            
             <div id="infosDynamiques"></div>
+            <br>
+
             <div id="zoneStatut" style="display:none; margin-top: 20px;">
-                <p><strong>Statut :</strong> <span id="statut"></span></p>
+                <p class="statut"><strong>Statut :</strong> <span class="statut" id="statut"></span></p>
             </div>
+            <br><br>
+
+
+            <div id="infosDynamiques2"></div>
+
+            
+            <div id="infosDynamiques2"></div>
+            
+            
+          
         </div>
     </div>
+</div>
+        
+
+
+    @if(session('success'))
+        <div style="background-color: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; border-radius: 5px; margin: 20px auto; display: block; width: 90%;border-radius: 8px;text-align: center;">
+            {{ session('success') }}
+        </div>
+    @endif
 
     {{-- Zone du tableau rechargée en AJAX --}}
     <div class="tab_info" id="zoneAffTab">
         @include('accueil.tableauAff.tableau')
     </div>
-</div>
 
 <script>
 // ── Barre latérale ───────────────────────────────────────────────────────────
+
 function ouvrirBarreLat(bouton) {
-    const type        = bouton.getAttribute('info_type');
-    const nom         = bouton.getAttribute('info_nom');
-    const prenom      = bouton.getAttribute('info_prenom');
-    const description = bouton.getAttribute('info_description');
-    const debut       = bouton.getAttribute('info_debut');
-    const fin         = bouton.getAttribute('info_fin');
-    const statut      = bouton.getAttribute('info_statut');
-    const entreprise  = bouton.getAttribute('info_entreprise');
-    const intitule    = bouton.getAttribute('info_intitule');
+    // Récupération des attributs de base
+    const type = bouton.getAttribute('info_type');
+        const titre = bouton.getAttribute('info_titre');
+        const nom = bouton.getAttribute('info_nom');
+        const prenom = bouton.getAttribute('info_prenom');
+        const email = bouton.getAttribute('info_email'); 
+        const classe = bouton.getAttribute('info_classe');
+        const description = bouton.getAttribute('info_description');
+        const debut = bouton.getAttribute('info_debut');
+        const fin = bouton.getAttribute('info_fin');
+        const statut = bouton.getAttribute('info_statut');
+        const entreprise = bouton.getAttribute('info_entreprise');
+        const intitule = bouton.getAttribute('info_intitule');
 
-    const zoneTitre  = document.querySelector('#titre');
-    const zoneInfos  = document.querySelector('#infosDynamiques');
-    const zoneStatut = document.getElementById('zoneStatut');
-    const statutElt  = document.getElementById('statut');
+        const cheminCV = bouton.getAttribute('info_cv'); // Récupère le chemin du CV
+        const cheminLM = bouton.getAttribute('info_lm');
 
-    let contenu = '';
+        
+        const zoneTitre = document.querySelector("#titre");
+        const zoneInfos = document.querySelector("#infosDynamiques");
+        const zoneInfos2 = document.querySelector("#infosDynamiques2");
 
+        const zoneStatut = document.getElementById("zoneStatut"); 
+        const statutElt = document.getElementById("statut");
+
+
+    
+    const storageUrl = "{{ asset('storage/') }}/";
+    let contenu = ""; 
+    let contenu2 = ""; 
+
+    // Logique selon le type d'élément cliqué
     if (type === 'stage') {
-        // Vue d'une offre de stage : détails uniquement
+
         zoneTitre.innerText = intitule;
-        contenu = `<br><hr><br>
-            <p><strong>Entreprise :</strong> ${entreprise}</p>
-            <p><strong>Période :</strong> du ${debut} au ${fin}</p>
-            <p><strong>Missions :</strong><br>${description}</p>`;
-        if (zoneStatut) zoneStatut.style.display = 'none';
+
+
+                const idStage = bouton.getAttribute('info_idstage');
+                const idEntreprise = bouton.getAttribute('info_identreprise');
+
+                contenu = `<br><hr><br>
+                <p><strong>Entreprise :</strong> ${entreprise}</p>
+                <p><strong>Date :</strong> du ${debut} au ${fin}</p>
+                <p><strong>Description :</strong><br>${description}</p>
+                <div style="display: flex; justify-content: center; margin-top: 30px;">
+                    <a href="{{ route('ajoutCandidature.Etape1_VU') }}?idStage=${idStage}&idEntreprise=${idEntreprise}" class="boutonAjout">Candidater</a>
+                </div>
+                `;
+
+
+                if(zoneStatut) zoneStatut.style.display = "none";
 
     } else if (type === 'candidatures') {
-        // Vue d'une candidature de l'étudiant
+        // --- VUE CANDIDATURE ---
         zoneTitre.innerText = intitule;
-        contenu = `<br><hr><br>
-            <p><strong>Entreprise :</strong> ${entreprise}</p>
-            <p><strong>Période :</strong> du ${debut} au ${fin}</p>
-            <p><strong>Missions :</strong><br>${description}</p>`;
 
-        if (statutElt) {
-            statutElt.innerText        = (statut == 1) ? 'Validée' : (statut == 3 ? 'Refusée' : 'En cours');
-            statutElt.style.color      = (statut == 1) ? 'green'   : (statut == 3 ? 'red'     : 'orange');
-            statutElt.style.fontWeight = 'bold';
-        }
-        if (zoneStatut) zoneStatut.style.display = 'block';
+            contenu = `<br><hr><br>
+                ${prenom ? `<p><strong>Candidat :</strong> ${prenom} ${nom}</p>` : ''}
+                <p><strong>Entreprise :</strong> ${entreprise}</p>
+                <p><strong>Date :</strong> du ${debut} au ${fin}</p>
+                <p><strong>Description :</strong><br>${description}</p>
+            `;
+            
+
+                contenu2 += `
+                <br><hr><br>
+                <h3>Documents joints :</h3>
+                <div style="margin-top: 10px;">
+                    ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" >
+                        <ion-icon name="document-text-outline"></ion-icon> Télécharger le CV
+                    </a>` : '<p>Aucun CV joint</p>'}
+                    
+                    ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" >
+                        <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
+                    </a>` : '<p>Aucune lettre jointe</p>'}
+                </div><br>`;
+
+
+
+
+
+
+                const idCandidature = bouton.getAttribute('info_id_candidature');
+
+                contenu2 += `
+                        <br><hr><br>
+                        <div style="display: flex; justify-content: center;">
+                            <a href="/candidature/supprimer/${idCandidature}" 
+                            onclick="return confirm('Voulez-vous vraiment supprimer cette candidature ?')"
+                            style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                                <ion-icon name="trash-outline"></ion-icon> Supprimer la candidature
+                            </a>
+                        </div>
+                    `;
+
+
+                statutElt.innerText = (statut == 1) ? "Validée" : (statut == 3 ? "Refusée" : "En cours");
+                statutElt.style.color = (statut == 1) ? "green" : (statut == 3 ? "red" : "orange");
+                statutElt.style.fontWeight = "bold";      
+                statutElt.style.padding = "0px 3px";    
+                statutElt.style.fontSize = "1rem";
+                if(zoneStatut) zoneStatut.style.display = "block";
     }
 
-    if (zoneInfos) zoneInfos.innerHTML = contenu;
+    if(zoneInfos){
+            zoneInfos.innerHTML = contenu;
+            zoneInfos2.innerHTML = contenu2;
+    } 
+    
     document.getElementById('barreLatérale').style.width = '500px';
 }
 

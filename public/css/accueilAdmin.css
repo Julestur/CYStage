@@ -83,13 +83,36 @@
     margin-bottom: 30px;
 }
 
+/* ---- STYLE TABLEAU DE BORD ETUDIANT (2 cartes centrées) ---- */
+.tab_bord_etudiant {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0 auto 40px auto;
+    width: 90%;
+    max-width: 800px; /* Limite la largeur pour que les cartes ne soient pas trop étirées */
+}
+
+/* On s'assure que les deux cartes ont la même taille */
+.tab_bord_etudiant .carre_style {
+    flex: 1;
+}
+
 @media (max-width: 900px){
     .tab_bord{
         grid-template-columns: repeat(2,1fr);
     }
+    
+    /* Ajout pour le mode étudiant sur mobile */
+    .tab_bord_etudiant {
+        flex-direction: column;
+        align-items: center;
+    }
+    .tab_bord_etudiant .carre_style {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
-
-
 
 
 

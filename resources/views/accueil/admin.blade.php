@@ -101,7 +101,11 @@
 
 
 
-
+    @if(session('success'))
+        <div style="background-color: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; border-radius: 5px; margin: 20px auto; display: block; width: 90%;border-radius: 8px;text-align: center;">
+            {{ session('success') }}
+        </div>
+    @endif
 
 
     <div class="tab_info" id="zoneAffTab">
@@ -249,6 +253,17 @@
                 <div style="display: flex; justify-content: center; margin-top: 30px;">
                     <a href="{{ route('ajoutCandidature.Etape1_VU') }}?idStage=${idStage}&idEntreprise=${idEntreprise}" class="boutonAjout">Candidater</a>
                 </div>
+
+                <br><hr><br>
+                
+                <div style="display: flex; justify-content: center; margin-top: 10px;">
+                    <a href="/stage/supprimer/${idStage}" 
+                    onclick="return confirm('Voulez-vous vraiment supprimer ce stage ?')"
+                    style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+                        <ion-icon name="trash-outline"></ion-icon>Supprimer le stage
+                    </a>
+                </div>
+
                 `;
 
 

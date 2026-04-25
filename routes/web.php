@@ -80,7 +80,8 @@ Route::middleware(['check.connexion'])->group(function () {
     // Redirection vers la page d'accueil
     Route::get('/accueil', [accueilController::class, 'index'])->name('accueil');
 
-
+    Route::get('/candidature/supprimer/{id}', [OPTION_ajoutCandidatureController::class, 'Supprimer_Candidature'])
+    ->name('candidature.supprimer');
 
     // --------------------------------------------------------------------------------------------------------------------------------------
     // ---------------------------- GESTION DES FONCTIONNALITES DEPUIS ACCEUIL --------------------------------------------------------------
@@ -158,8 +159,14 @@ Route::middleware(['check.connexion'])->group(function () {
     Route::get('/ajout-candidature/confirmation', [OPTION_ajoutCandidatureController::class, 'Vu_InscriptionAdmin_Etape2'])->name('inscriptionAdmin.Etape2_VU');
 
 
+
+    // SUPRESSION D'UNE CANDIDATURE
     Route::get('/candidature/supprimer/{id}', [App\Http\Controllers\OPTION_ajoutCandidatureController::class, 'Supprimer_Candidature'])
     ->name('candidature.supprimer');
+
+    // SUPRESSION D'UN STAGE
+    Route::get('/stage/supprimer/{id}', [OPTION_ajoutOffreStageController::class, 'Supprimer_Stage'])
+    ->name('stage.supprimer');
 
 
 

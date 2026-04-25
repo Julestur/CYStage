@@ -11,6 +11,7 @@ class accueilController extends Controller
 {
     public function index(Request $request)
     {
+
         // 1. Sécurité : Vérifier la session (comme ton ancien if(!isset($_SESSION...)))
         if (!Session::get('connecte')) {
             if ($request->ajax()) {
@@ -93,7 +94,7 @@ class accueilController extends Controller
         return view('accueil.admin', compact('salutation', 'prenom', 'stats', 'donnees', 'choix'));
     }
 
-   // ──────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────
     // VUE ETUDIANT
     // ──────────────────────────────────────────────────────────────────────────
     private function vueEtudiant($salutation, $prenom, $choix)
@@ -122,22 +123,32 @@ class accueilController extends Controller
                 ->select('s.*', 'e.nom as nomEntreprise')
                 ->get();
         } else {
-            // Candidatures de CET étudiant uniquement
-            $donnees = DB::table('candidature as c')
-                ->join('stage as s',      'c.idStage',       '=', 's.idStage')
-                ->join('entreprise as e', 'c.idEntreprise',  '=', 'e.idEntreprise')
-                ->join('utilisateur as u','c.idUtilisateur', '=', 'u.idUtilisateur')
-                ->where('c.idUtilisateur', $idUtilisateur)
-                ->select(
-                    's.intitule',
-                    'e.nom as nomEntreprise',
-                    'u.nom', 'u.prenom',
-                    'c.statut as numStatut',
-                    's.dateDebut', 's.dateFin',
-                    's.detail as stageDetail'
-                )
-                ->get();
-        }
+    $idUtilisateur = Session::get('id');
+
+    $donnees = DB::table('candidature as c')
+        // 1. Liaison avec le stage
+        ->leftJoin('stage as s', 'c.idStage', '=', 's.idStage')
+        // 2. Liaison avec l'entreprise (via le stage)
+        ->leftJoin('entreprise as e', 's.idEntreprise', '=', 'e.idEntreprise')
+        // 3. Liaison avec l'utilisateur (C'EST CETTE LIGNE QUI MANQUAIT)
+        ->leftJoin('utilisateur as u', 'c.idUtilisateur', '=', 'u.idUtilisateur') 
+        ->where('c.idUtilisateur', $idUtilisateur)
+        ->select(
+            'c.idCandidature', 
+            'c.CV',            
+            'c.LettreMotivation', 
+            'c.statut as info_statut',
+            'c.statut as numStatut',
+            's.intitule',
+            'e.nom as nomEntreprise',
+            'u.nom',     // Maintenant 'u' est reconnu grâce au leftJoin
+            'u.prenom',  // Maintenant 'u' est reconnu
+            's.dateDebut', 
+            's.dateFin',
+            's.detail as description'
+        )
+        ->get();
+}
  
         if (request()->ajax()) {
             return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();

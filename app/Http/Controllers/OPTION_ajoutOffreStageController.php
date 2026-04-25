@@ -15,7 +15,8 @@ class OPTION_ajoutOffreStageController extends Controller
    
     public function Vu_AjoutStage_Etape1() {
         
-        return view('OptionAccueil.ajoutStage1');
+        $entreprises = DB::table('entreprise')->orderBy('nom', 'asc')->get();
+        return view('OptionAccueil.ajoutStage1', compact('entreprises'));
 
     }
 
@@ -26,100 +27,63 @@ class OPTION_ajoutOffreStageController extends Controller
     // ----------------------------------------------------------------------------------
    
 
-    public function Traitement_AjoutStage_Etape1(Request $requete)
-    {
-
-
-
-        // Création de messages d'erreurs en frnacais
-        $messages = [
-            'nom.required'             => 'Le nom est obligatoire.',
-            'prenom.required'          => 'Le prénom est obligatoire.',
-            'mail.required'            => 'L\'adresse email est obligatoire.',
-            'mail.email'               => 'Le format de l\'email est invalide.',
-            'mail.unique'              => 'Cet email est déjà utilisé.',
-            'pseudo.required'          => 'L\'identifiant est obligatoire.',
-            'pseudo.unique'            => 'Cet identifiant est déjà pris.',
-            'MDP.required'    => 'Le mot de passe est obligatoire.',
-            'MDP.min'         => 'Le mot de passe doit faire au moins 8 caractères.',
-            'MDP.confirmed'   => 'La confirmation ne correspond pas au mot de passe.',
-            'grade.required'           => 'Veuillez choisir un statut.',
-        ];
-
-
-        // Création des conditions du formulaire 
+    public function Traitement_AjoutStage_Etape1(Request $requete){
+    // 1. On valide les données
         $requete->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'mail' => 'required|email|unique:utilisateur,email',
-            'pseudo' => 'required|unique:utilisateur,identifiant',
-            'MDP' => 'required|min:8|confirmed',
-            'grade' => 'required'
-        ], $messages);
-
-
-        
-
-
-        // 2. Détermination du statut (plus propre qu'une série de if)
-        $statuts = [
-            'admin' => 1,
-            'Etudiant' => 2,
-            'Professeur' => 3,
-            'Entreprise' => 4
-        ];
-        $statutVal = $statuts[$requete->grade] ?? 2;
+            'intitule'    => 'required',
+            'dateDebut'   => 'required',
+            'dateFin'     => 'required',
+            'description' => 'required',
+            'idEntreprise'=> 'required',
+        ]);
 
         try {
-            DB::beginTransaction(); // On démarre une transaction
-
-            $idEntreprise = null;
-            $idClasse = null;
-
-            // 3. Gestion Entreprise (si grade Entreprise)
-            if ($statutVal == 4 && $requete->filled('nom_entreprise')) {
-                // firstOrCreate cherche si l'entreprise existe, sinon la crée
-                $entreprise = DB::table('entreprise')->where('nom', $requete->nom_entreprise)->first();
-                if ($entreprise) {
-                    $idEntreprise = $entreprise->idEntreprise;
-                } else {
-                    $idEntreprise = DB::table('entreprise')->insertGetId(['nom' => $requete->nom_entreprise]);
-                }
-            }
-
-            // 4. Gestion Classe (si grade Etudiant)
-            if ($statutVal == 2 && $requete->filled('classe')) {
-                $classe = DB::table('classe')->where('nom', $requete->classe)->first();
-                if ($classe) {
-                    $idClasse = $classe->idClasse;
-                } else {
-                    $idClasse = DB::table('classe')->insertGetId(['nom' => $requete->classe]);
-                }
-            }
-
-            // 5. Création de l'utilisateur
-            DB::table('utilisateur')->insert([
-                'nom' => $requete->nom,
-                'prenom' => $requete->prenom,
-                'email' => $requete->mail,
-                'identifiant' => $requete->pseudo,
-                'mdp' => Hash::make($requete['MDP']), // ON HASHE !
-                'pdp' => 'profil.png',
-                'mdp_tmp' => 'vide',
-                'idStatut' => $statutVal,
-                'idEntreprise' => $idEntreprise,
-                'idClasse' => $idClasse
+            // 2. On insère dans la table 'stage'
+            // VERIFIE BIEN LE NOM DE TES COLONNES DANS phpMyAdmin
+            DB::table('stage')->insert([
+                'intitule'      => $requete->intitule,
+                'dateDebut'     => $requete->dateDebut,
+                'dateFin'       => $requete->dateFin,
+                'detail'        => $requete->description, 
+                'idEntreprise'  => $requete->idEntreprise,
+                'created_at'    => now(),
             ]);
 
-            DB::commit(); // Tout est bon, on valide en BDD
-
-            // On stocke le prénom en session flash juste pour le message de succès
-            return view('OptionAccueil.ajoutUtilisateur2', ['prenom' => $requete->prenom]);
+            // 3. On redirige vers l'accueil avec un message de succès
+            return redirect()->route('accueil')->with('success', 'Le stage a été ajouté !');
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Erreur ? On annule tout
-            return back()->withErrors(['error' => 'Erreur lors de l\'inscription : ' . $e->getMessage()])->withInput();
+            // SI CA NE MARCHE PAS, ce dd() va nous dire exactement pourquoi (ex: colonne manquante)
+            dd("Erreur SQL : " . $e->getMessage());
         }
     }
+
+
+    public function Supprimer_Stage($id)
+{
+    try {
+        // 1. On lance une transaction (si un truc plante, rien n'est supprimé)
+        DB::beginTransaction();
+
+        // 2. On supprime d'abord toutes les candidatures liées à ce stage
+        // Cela libère la contrainte de clé étrangère
+        DB::table('candidature')->where('idStage', $id)->delete();
+
+        // 3. Maintenant, on peut supprimer le stage sans erreur
+        $suppression = DB::table('stage')->where('idStage', $id)->delete();
+
+        if ($suppression) {
+            DB::commit(); // On valide définitivement les suppressions
+            return redirect()->route('accueil')->with('success', 'Le stage et ses candidatures ont été supprimés !');
+        }
+
+        DB::rollBack();
+        return redirect()->route('accueil')->with('error', 'Impossible de trouver ce stage.');
+
+    } catch (\Exception $e) {
+        DB::rollBack(); // En cas d'erreur SQL, on annule tout
+        return redirect()->route('accueil')->with('error', 'Erreur critique : ' . $e->getMessage());
+    }
+}
 }
 

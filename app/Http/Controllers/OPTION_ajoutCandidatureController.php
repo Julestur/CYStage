@@ -103,7 +103,7 @@ class OPTION_ajoutCandidatureController extends Controller
         DB::commit();
 
         // On redirige vers l'accueil avec un message
-        return redirect()->route('accueil')->with('success', 'Candidature enregistrée !');
+        return redirect()->route('accueil')->with('success', 'Candidature envoyée !');
 
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -134,7 +134,7 @@ class OPTION_ajoutCandidatureController extends Controller
         }
             DB::table('candidature')->where('idCandidature', $id)->delete();
         
-        return redirect()->route('accueil', ['choix' => 'candidatures'])->with('success', 'Supprimé !');
+        return redirect()->route('accueil', ['choix' => 'candidatures'])->with('success', 'La candidature a été supprimée avec succès !');
     }
             
             return back()->with('error', 'Candidature introuvable.');
@@ -144,4 +144,3 @@ class OPTION_ajoutCandidatureController extends Controller
         }
     }
 }
-

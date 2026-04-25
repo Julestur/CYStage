@@ -5,9 +5,11 @@
                 <a href="{{ route('inscriptionAdmin.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
             
             @elseif($choix == 'stage')
-                 <h2 class="titreInfo">Liste des stages</h2>
-                 <a href="{{ route('ajoutStage.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
-            
+                <h2 class="titreInfo">Liste des stages</h2>
+                {{-- Seuls l'Admin et l'Entreprise voient ce bouton --}}
+                @if(in_array(Session::get('grade'), ['Admin', 'Entreprise']))
+                    <a href="{{ route('ajoutStage.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
+                @endif
             @elseif($choix == 'candidatures')
                 <h2 class="titreInfo">Liste des candidatures</h2>
             

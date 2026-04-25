@@ -75,6 +75,8 @@ public function logout() {
         'photo-profil' => $user->pdp,
         'mdp_tmp'      => $user->mdp_tmp,
         'grade'        => $user->grade,
+        'idStatut'     => $user->idStatut,
+        'idEntreprise' => $user->idEntreprise,
     ]);
 
     }
