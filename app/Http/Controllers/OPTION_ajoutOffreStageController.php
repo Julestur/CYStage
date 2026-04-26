@@ -26,10 +26,16 @@ class OPTION_ajoutOffreStageController extends Controller
     // Traitement du formulaire ---------------------------------------------------------
     // ----------------------------------------------------------------------------------
    
-
+    
     public function Traitement_AjoutStage_Etape1(Request $requete){
-    // 1. On valide les données
-        $requete->validate([
+        // 💡 Le code d'avant pour fusionner l'ID de l'entreprise est toujours là
+    if (\Illuminate\Support\Facades\Session::get('grade') == 'Entreprise') {
+        $requete->merge([
+            'idEntreprise' => \Illuminate\Support\Facades\Session::get('idEntreprise')
+        ]);
+    }
+
+        $validator = \Illuminate\Support\Facades\Validator::make($requete->all(), [
             'intitule'    => 'required',
             'dateDebut'   => 'required',
             'dateFin'     => 'required',
@@ -37,6 +43,9 @@ class OPTION_ajoutOffreStageController extends Controller
             'idEntreprise'=> 'required',
         ]);
 
+        if ($validator->fails()) {
+            dd("🚨 LA VALIDATION A ÉCHOUÉ ! Voici l'erreur exacte :", $validator->errors()->all(), "Données envoyées :", $requete->all());
+        }
         try {
             // 2. On insère dans la table 'stage'
             // VERIFIE BIEN LE NOM DE TES COLONNES DANS phpMyAdmin
