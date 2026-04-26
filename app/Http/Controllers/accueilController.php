@@ -226,6 +226,9 @@ class accueilController extends Controller
                 ->join('utilisateur as u', 'c.idUtilisateur', '=', 'u.idUtilisateur')
                 ->where('c.idEntreprise', $idEntreprise)
                 ->select(
+                    'c.idCandidature',    
+                    'c.CV',               
+                    'c.LettreMotivation', 
                     's.intitule',
                     'u.nom', 'u.prenom', 'u.email',
                     'c.statut as numStatut',
