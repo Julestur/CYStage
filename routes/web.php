@@ -200,8 +200,10 @@ Route::middleware(['check.connexion'])->group(function () {
         ->name('reinitMDP_GESTION');
 
 
-
-
+        // Routes pour la gestion des candidatures par l'entreprise
+  // Routes pour la gestion des candidatures par l'entreprise
+    Route::get('/candidature/accepter/{id}', [OPTION_ajoutCandidatureController::class, 'Accepter_Candidature'])->name('candidature.accepter');
+    Route::get('/candidature/refuser/{id}', [OPTION_ajoutCandidatureController::class, 'Refuser_Candidature'])->name('candidature.refuser');
 });
 
 
