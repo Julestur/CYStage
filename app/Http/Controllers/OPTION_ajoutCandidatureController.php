@@ -143,4 +143,18 @@ class OPTION_ajoutCandidatureController extends Controller
             dd("Erreur lors de la suppression : " . $e->getMessage());
         }
     }
+
+
+
+    public function Accepter_Candidature($id) {
+    // On passe le statut à 1 (Accepté/Vert)
+    DB::table('candidature')->where('idCandidature', $id)->update(['statut' => 1]);
+        
+        return back()->with('success', 'Candidature acceptée !');
+    }
+
+    public function Refuser_Candidature($id) {
+        // On utilise votre logique de suppression existante pour supprimer proprement
+        return $this->Supprimer_Candidature($id);
+    }
 }
