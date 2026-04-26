@@ -15,6 +15,58 @@
   --pos-souris-y: 0px;
 }
 
+.tab_bord_centre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin: 40px auto;
+    flex-wrap: wrap; 
+    max-width: 1200px; 
+}
+
+.carre_style {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.04);
+    padding: 25px;
+    width: 280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; 
+}
+
+.contenu_carte h3 {
+    font-size: 15px;
+    color: #6b7280;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+}
+
+.contenu_carte .valeur {
+    font-size: 34px;
+    font-weight: bold;
+    color: #111827;
+    margin: 0;
+}
+
+.style_icone {
+    font-size: 26px;
+    color: #3b82f6; /* Bleu vif */
+    background-color: #eff6ff; /* Fond bleu très pastel */
+    padding: 14px;
+    border-radius: 12px; /* Coins arrondis pour le fond */
+}
+
+.barre_choix {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    margin-top: 10px;
+}
+
 .no-select {
     user-select: none;
     -webkit-user-select: none; 
