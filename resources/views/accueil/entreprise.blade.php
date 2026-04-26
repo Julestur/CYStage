@@ -116,36 +116,44 @@ function ouvrirBarreLat(bouton) {
         if (zoneStatut) zoneStatut.style.display = 'none';
 
     } else if (type === 'candidatures') {
-        // Détails d'une candidature reçue
+        const idCandidature = bouton.getAttribute('info_id_candidature');
         zoneTitre.innerText = intitule;
+        
         contenu = `<br><hr><br>
             <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
             <p><strong>Email :</strong> ${email}</p>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
             <p><strong>Missions :</strong><br>${description}</p>`;
 
-        // Affichage des documents du candidat
+        // Zone des documents (déjà existante dans votre code)
         contenu2 = `
             <br><hr><br>
             <h3>Documents du candidat :</h3>
             <div style="margin-top: 10px;">
-                ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" >
+                ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" id="downloadCV">
                     <ion-icon name="document-text-outline"></ion-icon> Télécharger le CV
                 </a>` : '<p>Aucun CV joint</p>'}
                 
-                ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" >
+                ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" id="downloadLM">
                     <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
                 </a>` : '<p>Aucune lettre jointe</p>'}
-            </div><br>`;
+            </div><br>
 
-        if (statutElt) {
-            statutElt.innerText        = (statut == 1) ? 'Validée' : (statut == 3 ? 'Refusée' : 'En cours');
-            statutElt.style.color      = (statut == 1) ? 'green'   : (statut == 3 ? 'red'     : 'orange');
-            statutElt.style.fontWeight = 'bold';
-        }
-        if (zoneStatut) zoneStatut.style.display = 'block';
+            <br><hr><br>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <a href="/candidature/accepter/${idCandidature}" 
+                   onclick="telechargerEtAccepter(event, this)"
+                   style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon> Accepter
+                </a>
+
+                <a href="/candidature/refuser/${idCandidature}" 
+                   onclick="return confirm('Voulez-vous vraiment refuser (et supprimer) cette candidature ?')"
+                   style="background-color: #dc3545; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    <ion-icon name="close-circle-outline"></ion-icon> Refuser
+                </a>
+            </div>`;
     }
-
     if (zoneInfos) zoneInfos.innerHTML = contenu;
     if (zoneInfos2) zoneInfos2.innerHTML = contenu2; //  Injection sécurisée
 
@@ -188,6 +196,19 @@ function chargerContenu(choix) {
         console.error('Erreur:', error);
         zone.style.opacity = '1';
     });
+}
+
+function telechargerEtAccepter(event, element) {
+    // 1. On récupère les liens de téléchargement s'ils existent
+    const linkCV = document.getElementById('downloadCV');
+    const linkLM = document.getElementById('downloadLM');
+
+    // 2. On déclenche les téléchargements dans de nouveaux onglets/fenêtres
+    if (linkCV) window.open(linkCV.href, '_blank');
+    if (linkLM) window.open(linkLM.href, '_blank');
+
+    // 3. On laisse le lien principal (Accepter) continuer vers la route Laravel
+    return true; 
 }
 </script>
 
