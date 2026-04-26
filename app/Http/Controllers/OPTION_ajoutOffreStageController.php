@@ -28,7 +28,7 @@ class OPTION_ajoutOffreStageController extends Controller
    
     
     public function Traitement_AjoutStage_Etape1(Request $requete){
-        // 💡 Le code d'avant pour fusionner l'ID de l'entreprise est toujours là
+        
     if (\Illuminate\Support\Facades\Session::get('grade') == 'Entreprise') {
         $requete->merge([
             'idEntreprise' => \Illuminate\Support\Facades\Session::get('idEntreprise')
