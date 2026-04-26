@@ -9,10 +9,9 @@
         <h2 class="titre1">{{ $salutation }}, {{ $prenom }} !</h2>
     </div>
 
-    <h2 class="titre2">Tableau de bord</h2>
+    <h2 class="titre2" style="text-align: center;">Tableau de bord</h2>
 
-    {{-- Tableau de bord entreprise : 3 cartes centrées --}}
-    <div class="tab_bord_entreprise">
+    <div class="tab_bord_centre">
         <div class="carre_style">
             <div class="contenu_carte">
                 <h3>Mes offres publiées</h3>
@@ -47,14 +46,20 @@
     </div>
 
     {{-- Barre latérale --}}
+    {{-- Barre latérale --}}
     <div id="barreLatérale">
         <div id="contenuBarreLat">
             <span onclick="fermerBarreLat()" style="cursor:pointer; float:right; font-size:2rem;">&times;</span>
             <h2 id="titre"></h2><br><br>
+            
             <div id="infosDynamiques"></div>
+            
             <div id="zoneStatut" style="display:none; margin-top: 20px;">
                 <p><strong>Statut :</strong> <span id="statut"></span></p>
             </div>
+            
+            {{-- ✅ Ajout obligatoire pour ne pas faire planter le JS --}}
+            <div id="infosDynamiques2"></div>
         </div>
     </div>
 
@@ -66,6 +71,7 @@
 
 <script>
 // ── Barre latérale ───────────────────────────────────────────────────────────
+
 function ouvrirBarreLat(bouton) {
     const type        = bouton.getAttribute('info_type');
     const nom         = bouton.getAttribute('info_nom');
@@ -76,20 +82,37 @@ function ouvrirBarreLat(bouton) {
     const fin         = bouton.getAttribute('info_fin');
     const statut      = bouton.getAttribute('info_statut');
     const intitule    = bouton.getAttribute('info_intitule');
+    
+    // Nouveaux attributs
+    const idStage     = bouton.getAttribute('info_idstage');
+    const cheminCV    = bouton.getAttribute('info_cv'); 
+    const cheminLM    = bouton.getAttribute('info_lm');
 
     const zoneTitre  = document.querySelector('#titre');
     const zoneInfos  = document.querySelector('#infosDynamiques');
+    const zoneInfos2 = document.querySelector('#infosDynamiques2'); // 
     const zoneStatut = document.getElementById('zoneStatut');
     const statutElt  = document.getElementById('statut');
 
+    const storageUrl = "{{ asset('storage/') }}/";
     let contenu = '';
+    let contenu2 = '';
 
     if (type === 'mes_offres') {
-        // Détails d'une offre publiée par l'entreprise
+        // Détails d'une offre publiée par l'entreprise + Bouton de suppression
         zoneTitre.innerText = intitule;
         contenu = `<br><hr><br>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
-            <p><strong>Missions :</strong><br>${description}</p>`;
+            <p><strong>Missions :</strong><br>${description}</p>
+            <br><hr><br>
+            <div style="display: flex; justify-content: center; margin-top: 20px;">
+                <a href="/stage/supprimer/${idStage}" 
+                   onclick="return confirm('⚠️ Attention : Cela supprimera définitivement cette offre ET toutes les candidatures qui y sont liées. Voulez-vous continuer ?')"
+                   style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                    <ion-icon name="trash-outline"></ion-icon> Supprimer cette offre
+                </a>
+            </div>`;
+            
         if (zoneStatut) zoneStatut.style.display = 'none';
 
     } else if (type === 'candidatures') {
@@ -101,6 +124,20 @@ function ouvrirBarreLat(bouton) {
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
             <p><strong>Missions :</strong><br>${description}</p>`;
 
+        // Affichage des documents du candidat
+        contenu2 = `
+            <br><hr><br>
+            <h3>Documents du candidat :</h3>
+            <div style="margin-top: 10px;">
+                ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" >
+                    <ion-icon name="document-text-outline"></ion-icon> Télécharger le CV
+                </a>` : '<p>Aucun CV joint</p>'}
+                
+                ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" >
+                    <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
+                </a>` : '<p>Aucune lettre jointe</p>'}
+            </div><br>`;
+
         if (statutElt) {
             statutElt.innerText        = (statut == 1) ? 'Validée' : (statut == 3 ? 'Refusée' : 'En cours');
             statutElt.style.color      = (statut == 1) ? 'green'   : (statut == 3 ? 'red'     : 'orange');
@@ -110,6 +147,8 @@ function ouvrirBarreLat(bouton) {
     }
 
     if (zoneInfos) zoneInfos.innerHTML = contenu;
+    if (zoneInfos2) zoneInfos2.innerHTML = contenu2; //  Injection sécurisée
+
     document.getElementById('barreLatérale').style.width = '500px';
 }
 
