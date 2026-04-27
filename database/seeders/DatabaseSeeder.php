@@ -154,6 +154,7 @@ class DatabaseSeeder extends Seeder
         'mdp' => Hash::make('jules4'),
         'idStatut' => 4,
         'idClasse' => 3,
+        'idEntreprise' => 1,
         'pdp' => 'profil.png',
         'mdp_tmp' => '',
     ]);

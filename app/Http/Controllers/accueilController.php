@@ -7,50 +7,58 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-class accueilController extends Controller
-{
-    public function index(Request $request)
-    {
+class accueilController extends Controller{
 
-        // 1. Sécurité : Vérifier la session (comme ton ancien if(!isset($_SESSION...)))
+
+
+
+    /* ################################################################################################# */
+    /* ------------------------- GESTION DES L'AFFICHAGE DES PAGES D'ACCUEIL --------------------------- */
+    /* ################################################################################################# */
+
+
+    public function index(Request $request){
+
+        // VERIF SI L4UTILISATEUR EST CONNECTE A LA SESSION
         if (!Session::get('connecte')) {
+            
             if ($request->ajax()) {
-                // Si c'est de l'AJAX, on envoie un code erreur 401 (Non autorisé)
                 return response()->json(['error' => 'Session expirée'], 401);
             }
             return redirect('/')->withErrors(['error' => 'Veuillez vous connecter.']);
         }
+        
         else{
 
-               // 2. Redirection si MDP temporaire
-        if (!empty(Session::get('mdp_tmp')) && Session::get('mdp_tmp') !== 'vide') {
-            return redirect('/changer-mdp-temp');
-        }
+            // ON RECUPERE LES INFO DE L'UTILISATEUR STOCKE DANS LA SESSION
+            $grade = Session::get('grade');
+            $prenom = Session::get('prenom');
+            $choix = $request->query('choix', 'candidatures');
 
-        $grade = Session::get('grade');
-        $prenom = Session::get('prenom');
-        $choix = $request->query('choix', 'candidatures'); // Choix par défaut pour l'admin
+            // GESTION DES INFOS AFFICHEES HEURE POUR BONSOIR ET BONJOUR
+            $heure = date("H");
+            $salutation = ($heure >= 6 && $heure < 18) ? "Bonjour" : "Bonsoir";
 
-        // 3. Logique de salutation
-        $heure = date("H");
-        $salutation = ($heure >= 6 && $heure < 18) ? "Bonjour" : "Bonsoir";
-
-        // 4. Dispatching selon le grade
-        if ($grade === 'Admin') {
-            return $this->vueAdmin($salutation, $prenom, $choix);
-        } elseif ($grade === 'Etudiant') {
-            return $this->vueEtudiant($salutation, $prenom, $choix);
-        } elseif ($grade === 'Professeur') {
-            return $this->vueProfesseur($salutation, $prenom, $choix);
-        } elseif ($grade === 'Entreprise') {
-            return $this->vueEntreprise($salutation, $prenom, $choix);
-        } else {
-            return $this->vueStandard($salutation, $prenom, $grade);
-        }
+            // GESTION DU CHOIX DE LA PAGE A AFFICHER
+            if ($grade === 'Admin') {
+                return $this->vueAdmin($salutation, $prenom, $choix);
+            } elseif ($grade === 'Etudiant') {
+                return $this->vueEtudiant($salutation, $prenom, $choix);
+            } elseif ($grade === 'Professeur') {
+                return $this->vueProfesseur($salutation, $prenom, $choix);
+            } elseif ($grade === 'Entreprise') {
+                return $this->vueEntreprise($salutation, $prenom, $choix);
+            } else {
+                return $this->vueStandard($salutation, $prenom, $grade);
+            }
 
         }
     }
 
+
+    /* ################################################################################################# */
+    /* --------------------- GESTION DES L'AFFICHAGE DE LA PAGE D'ACCUEIL ADMIN ------------------------ */
+    /* ################################################################################################# */
 
     private function vueAdmin($salutation, $prenom, $choix) {
         $stats = [
@@ -86,19 +94,30 @@ class accueilController extends Controller
                             ->get(),
         };
 
+        // Gestion du cas des requettes Ajax pour éviter d'avoir à recharger la page
         if (request()->ajax()) {
-        // ICI : On pointe vers le PETIT fichier créé à l'étape 1
-        return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();
-    }
+            return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();
+        }
 
+        // Retour vars le blade
         return view('accueil.admin', compact('salutation', 'prenom', 'stats', 'donnees', 'choix'));
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // VUE ETUDIANT
-    // ──────────────────────────────────────────────────────────────────────────
-    private function vueEtudiant($salutation, $prenom, $choix)
-    {
+    
+    
+    
+    
+    
+    
+    
+    
+    /* ################################################################################################# */
+    /* ---------------------- GESTION DES L'AFFICHAGE DE L'ACCUEIL POUR ETUDIANT ----------------------- */
+    /* ################################################################################################# */
+
+
+    private function vueEtudiant($salutation, $prenom, $choix){
+
         // Choix par défaut pour l'étudiant : stages disponibles
         if ($choix === 'candidatures' || $choix === 'stage') {
             // OK
@@ -148,20 +167,33 @@ class accueilController extends Controller
             's.detail as description'
         )
         ->get();
-}
- 
+        }
+        // Gestion du cas des requettes Ajax pour éviter d'avoir à recharger la page
         if (request()->ajax()) {
             return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();
         }
  
+        // Retour vars le blade
         return view('accueil.etudiant', compact('salutation', 'prenom', 'stats', 'donnees', 'choix'));
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // VUE PROFESSEUR
-    // ──────────────────────────────────────────────────────────────────────────
-    private function vueProfesseur($salutation, $prenom, $choix)
-    {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* ################################################################################################# */
+    /* ----------------------- GESTION DES L'AFFICHAGE DE L'ACCUEIL POUR PROF ------------------------- */
+    /* ################################################################################################# */
+
+
+    private function vueProfesseur($salutation, $prenom, $choix){
+        
+    
         // Choix autorisés pour le prof
         if (!in_array($choix, ['etudiant', 'stage', 'candidatures'])) {
             $choix = 'etudiant';
@@ -172,22 +204,27 @@ class accueilController extends Controller
             'nbStages'    => DB::table('stage')->count(),
         ];
  
-        $donnees = $this->getDonnees($choix);
+        $donnees = $this->recupBDD($choix);
  
+        // Gestion du cas des requettes Ajax pour éviter d'avoir à recharger la page
         if (request()->ajax()) {
             return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();
         }
  
+        // Retour vars le blade
         return view('accueil.professeur', compact('salutation', 'prenom', 'stats', 'donnees', 'choix'));
     }
 
 
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // VUE ENTREPRISE
-    // ──────────────────────────────────────────────────────────────────────────
-    private function vueEntreprise($salutation, $prenom, $choix)
-    {
+    /* ################################################################################################# */
+    /* --------------------- GESTION DES L'AFFICHAGE DE L'ACCUEIL POUR ENTREPRISE ---------------------- */
+    /* ################################################################################################# */
+
+
+    private function vueEntreprise($salutation, $prenom, $choix) {
+        
+        // Options dispo pour le profil entreprise
         if (!in_array($choix, ['mes_offres', 'candidatures'])) {
             $choix = 'mes_offres';
         }
@@ -239,43 +276,27 @@ class accueilController extends Controller
                 ->get();
         }
  
+        // Gestion du cas des requettes Ajax pour éviter d'avoir à recharger la page
         if (request()->ajax()) {
             return view('accueil.tableauAff.tableau', compact('donnees', 'choix'))->render();
         }
  
+        // Retour vars le blade
         return view('accueil.entreprise', compact('salutation', 'prenom', 'stats', 'donnees', 'choix', 'idEntreprise'));
     }
 
 
 
-
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // VUE STANDARD (fallback)
-    // ──────────────────────────────────────────────────────────────────────────
-    private function vueStandard($salutation, $prenom, $grade)
-    {
-        $fichiers    = [];
-        $repertoire  = public_path('sorties/');
- 
-        if (is_dir($repertoire)) {
-            foreach (glob($repertoire . "*.csv") as $filepath) {
-                $fichiers[basename($filepath)] = filemtime($filepath);
-            }
-            arsort($fichiers);
-        }
- 
-        return view('accueil.standard', compact('salutation', 'prenom', 'grade', 'fichiers'));
-    }
  
 
 
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // HELPER : requêtes communes (partagées Admin / Prof)
-    // ──────────────────────────────────────────────────────────────────────────
-    private function getDonnees(string $choix)
-    {
+    /* ################################################################################################# */
+    /* ------------------------ FONCTION POUR RECUPERER LES DONNEES DANS LA BDD ------------------------ */
+    /* ################################################################################################# */
+
+    private function recupBDD(string $choix){
+        
         return match ($choix) {
  
             'prof' => DB::table('utilisateur')
