@@ -63,7 +63,28 @@ Route::get('/inscription/succes', [InscriptionController::class, 'Vu_Inscription
 
 
 
+// --------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------ REINITIALISATION MDP DEPUIS PORTAIL -------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------
 
+
+    // 1. Page de saisie de l'email
+    Route::get('/mot-de-passe-oublie', function () {
+        return view('gestionMDP.MDP_Oublie'); 
+    })->name('password.request');
+
+    // 2. Traitement de l'envoi du mail
+    Route::post('/mot-de-passe-oublie', [MDP_OublieController::class, 'sendResetLink'])
+        ->name('password.email.process');
+
+    // 3. Affichage du formulaire (Le lien cliqué dans le mail arrive ICI)
+    // J'utilise le nom 'password.reset' car c'est celui que ton contrôleur génère pour le mail
+    Route::get('/reinitialisation-mot-de-passe/{token}', [MDP_OublieController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    // 4. Validation du nouveau mot de passe (Le bouton "Enregistrer")
+    Route::post('/Réinitialisation-mot-de-passe', [MDP_OublieController::class, 'updatePassword'])
+        ->name('reinitMDP_GESTION');
 
 
 
@@ -177,27 +198,6 @@ Route::middleware(['check.connexion'])->group(function () {
     // --------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-    // Processus de réinitialisation des MDP
-
-
-    // 1. Page de saisie de l'email
-    Route::get('/mot-de-passe-oublie', function () {
-        return view('gestionMDP.MDP_Oublie'); 
-    })->name('password.request');
-
-    // 2. Traitement de l'envoi du mail
-    Route::post('/mot-de-passe-oublie', [MDP_OublieController::class, 'sendResetLink'])
-        ->name('password.email.process');
-
-    // 3. Affichage du formulaire (Le lien cliqué dans le mail arrive ICI)
-    // J'utilise le nom 'password.reset' car c'est celui que ton contrôleur génère pour le mail
-    Route::get('/reinitialisation-mot-de-passe/{token}', [MDP_OublieController::class, 'showResetForm'])
-        ->name('password.reset');
-
-    // 4. Validation du nouveau mot de passe (Le bouton "Enregistrer")
-    Route::post('/Réinitialisation-mot-de-passe', [MDP_OublieController::class, 'updatePassword'])
-        ->name('reinitMDP_GESTION');
 
 
         // Routes pour la gestion des candidatures par l'entreprise
