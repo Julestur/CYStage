@@ -50,7 +50,7 @@
 
 
             <div class="bouton">
-                <input type="submit" value="Créer l'utilisateur" id="bouton-style-connexion">
+                <input type="submit" value="Créer le stage" id="bouton-style-connexion">
             </div>
 
             <br><br>
