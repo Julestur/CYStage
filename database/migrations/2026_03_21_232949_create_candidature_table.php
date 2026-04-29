@@ -15,7 +15,9 @@ return new class extends Migration
             
             $table->id('idCandidature'); 
             $table->integer('statut')->default(0);
-                        
+            $table->tinyInteger('statut_entreprise')->default(0);
+            $table->tinyInteger('statut_prof')->default(0); 
+            
             $table->string('CV', 100)->nullable();
             $table->integer('estVerif_CV')->default(0);
 
