@@ -98,8 +98,10 @@ function ouvrirBarreLat(bouton) {
         const statut = bouton.getAttribute('info_statut');
         const entreprise = bouton.getAttribute('info_entreprise');
         const intitule = bouton.getAttribute('info_intitule');
-
-        const cheminCV = bouton.getAttribute('info_cv'); // Récupère le chemin du CV
+        const statutEntreprise = bouton.getAttribute('info_statut_entreprise');
+        const statutProf       = bouton.getAttribute('info_statut_prof');
+        const remarqueProf = bouton.getAttribute('info_remarque_prof');
+        const cheminCV = bouton.getAttribute('info_cv');
         const cheminLM = bouton.getAttribute('info_lm');
 
         
@@ -108,7 +110,7 @@ function ouvrirBarreLat(bouton) {
         const zoneInfos2 = document.querySelector("#infosDynamiques2");
 
         const zoneStatut = document.getElementById("zoneStatut"); 
-        const statutElt = document.getElementById("statut");
+
 
 
     
@@ -125,14 +127,15 @@ function ouvrirBarreLat(bouton) {
                 const idStage = bouton.getAttribute('info_idstage');
                 const idEntreprise = bouton.getAttribute('info_identreprise');
 
-                contenu = `<br><hr><br>
+                contenu += `<br><hr><br>
                 <p><strong>Entreprise :</strong> ${entreprise}</p>
                 <p><strong>Date :</strong> du ${debut} au ${fin}</p>
                 <p><strong>Description :</strong><br>${description}</p>
                 <div style="display: flex; justify-content: center; margin-top: 30px;">
                     <a href="{{ route('ajoutCandidature.Etape1_VU') }}?idStage=${idStage}&idEntreprise=${idEntreprise}" class="boutonAjout">Candidater</a>
                 </div>
-                `;
+                `
+               ;
 
 
                 if(zoneStatut) zoneStatut.style.display = "none";
@@ -141,12 +144,32 @@ function ouvrirBarreLat(bouton) {
         // --- VUE CANDIDATURE ---
         zoneTitre.innerText = intitule;
 
-            contenu = `<br><hr><br>
-                ${prenom ? `<p><strong>Candidat :</strong> ${prenom} ${nom}</p>` : ''}
-                <p><strong>Entreprise :</strong> ${entreprise}</p>
-                <p><strong>Date :</strong> du ${debut} au ${fin}</p>
-                <p><strong>Description :</strong><br>${description}</p>
-            `;
+             let statutTexte, statutCouleur;
+        if (statutEntreprise == 1 && statutProf == 1) {
+            statutTexte = "Acceptée"; statutCouleur = "green";
+        } else if (statutEntreprise == 1) {
+            statutTexte = "En attente prof"; statutCouleur = "orange";
+        } else if (statutProf == 1) {
+            statutTexte = "En attente entreprise"; statutCouleur = "orange";
+        } else {
+            statutTexte = "En attente"; statutCouleur = "grey";
+        }
+
+        contenu = `<br><hr><br>
+            <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
+            <p><strong>Email :</strong> ${email}</p>
+            <p><strong>Période :</strong> du ${debut} au ${fin}</p>
+            <p><strong>Missions :</strong><br>${description}</p>
+            <p style="font-size: 1rem; margin-top: 10px;">
+                <strong>Statut :</strong> 
+                <span style="color: ${statutCouleur};  float : none; font-size : 1rem; font-weight: bold;">${statutTexte}</span>
+            </p>
+            ${remarqueProf ? `<br><hr><br>
+                <h3>Commentaire du professeur :</h3>
+                <p style="color: grey; font-style: italic;">${remarqueProf}</p>
+            ` : ''}`;
+
+        if(zoneStatut) zoneStatut.style.display = 'none';
             
 
                 contenu2 += `
@@ -180,13 +203,6 @@ function ouvrirBarreLat(bouton) {
                         </div>
                     `;
 
-
-                statutElt.innerText = (statut == 1) ? "Validée" : (statut == 3 ? "Refusée" : "En cours");
-                statutElt.style.color = (statut == 1) ? "green" : (statut == 3 ? "red" : "orange");
-                statutElt.style.fontWeight = "bold";      
-                statutElt.style.padding = "0px 3px";    
-                statutElt.style.fontSize = "1rem";
-                if(zoneStatut) zoneStatut.style.display = "block";
     }
 
     if(zoneInfos){

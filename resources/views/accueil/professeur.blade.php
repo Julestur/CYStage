@@ -11,7 +11,6 @@
 
     <h2 class="titre2">Tableau de bord</h2>
 
-    {{-- Tableau de bord professeur : 2 cartes centrées --}}
     <div class=" tab_bord_etudiant">
         <div class="carre_style">
             <div class="contenu_carte">
@@ -48,10 +47,15 @@
         <div id="contenuBarreLat">
             <span onclick="fermerBarreLat()">&times;</span>
             <h2 id="titre"></h2><br><br>
+
             <div id="infosDynamiques"></div>
+
+
             <div id="zoneStatut" style="display:none; margin-top: 20px; font-size: 1rem;">
                 <p><strong>Statut :</strong> <span  id="statut" style="font-size: 1rem;"></span></p>
             </div>
+
+            <div id="infosDynamiques2"></div>
 
         </div>
     </div>
@@ -76,13 +80,23 @@ function ouvrirBarreLat(bouton) {
     const statut      = bouton.getAttribute('info_statut');
     const entreprise  = bouton.getAttribute('info_entreprise');
     const intitule    = bouton.getAttribute('info_intitule');
+    const statutEntreprise = bouton.getAttribute('info_statut_entreprise');
+    const statutProf       = bouton.getAttribute('info_statut_prof');
+    const remarqueProf = bouton.getAttribute('info_remarque_prof');
+
+    const idStage     = bouton.getAttribute('info_idstage');
+    const cheminCV    = bouton.getAttribute('info_cv'); 
+    const cheminLM    = bouton.getAttribute('info_lm');
 
     const zoneTitre  = document.querySelector('#titre');
     const zoneInfos  = document.querySelector('#infosDynamiques');
+    const zoneInfos2 = document.querySelector('#infosDynamiques2'); 
     const zoneStatut = document.getElementById('zoneStatut');
     const statutElt  = document.getElementById('statut');
-
+    
+    const storageUrl = "{{ asset('storage/') }}/";
     let contenu = '';
+    let contenu2 = '';
 
     if (type === 'etudiant') {
         zoneTitre.innerText = `${prenom} ${nom}`;
@@ -101,23 +115,80 @@ function ouvrirBarreLat(bouton) {
             <p><strong>Missions :</strong><br>${description}</p>`;
         if (zoneStatut) zoneStatut.style.display = 'none';
 
-    } else if (type === 'candidatures') {
+    }  else if (type === 'candidatures') {
+        const idCandidature = bouton.getAttribute('info_id_candidature');
+        
         zoneTitre.innerText = intitule;
+        
+          let statutTexte, statutCouleur;
+        if (statutEntreprise == 1 && statutProf == 1) {
+            statutTexte = "Acceptée"; statutCouleur = "green";
+        } else if (statutEntreprise == 1) {
+            statutTexte = "En attente prof"; statutCouleur = "orange";
+        } else if (statutProf == 1) {
+            statutTexte = "En attente entreprise"; statutCouleur = "orange";
+        } else {
+            statutTexte = "En attente"; statutCouleur = "grey";
+        }
+
         contenu = `<br><hr><br>
             <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
-            <p><strong>Entreprise :</strong> ${entreprise}</p>
+            <p><strong>Email :</strong> ${email}</p>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
-            <p><strong>Missions :</strong><br>${description}</p>`;
+            <p><strong>Missions :</strong><br>${description}</p>
+            <p style="font-size: 1rem; margin-top: 10px;">
+                <strong>Statut :</strong> 
+                <span style="color: ${statutCouleur};  float : none; font-size : 1rem; font-weight: bold;">${statutTexte}</span>
+            </p>`;
 
-        if (statutElt) {
-            statutElt.innerText    = (statut == 1) ? 'Validée' : (statut == 3 ? 'Refusée' : 'En cours');
-            statutElt.style.color  = (statut == 1) ? 'green'   : (statut == 3 ? 'red'     : 'orange');
-            statutElt.style.fontWeight = 'bold';
-        }
-        if (zoneStatut) zoneStatut.style.display = 'block';
+        if(zoneStatut) zoneStatut.style.display = 'none';
+
+
+        contenu2 = `
+            <br><hr><br>
+                <h3>Commentaire du professeur :</h3>
+                ${remarqueProf ? `<p style="color: grey; font-style: italic;">${remarqueProf}</p>` : '<p>Aucun commentaire pour l\'instant.</p>'}
+                
+                <form action="/candidature/commenter/${idCandidature}" method="POST" style="margin-top: 15px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <textarea name="remarque" rows="4" placeholder="Écrire un commentaire..." 
+                        style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; resize: vertical;"
+                    >${remarqueProf ?? ''}</textarea>
+                    <button type="submit" 
+                        style="margin-top: 10px; background-color: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
+                        <ion-icon name="save-outline"></ion-icon> Enregistrer le commentaire
+                    </button>
+                </form>
+            <br><hr><br>
+            <h3>Documents du candidat :</h3>
+            <div style="margin-top: 10px;">
+                ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" id="downloadCV">
+                    <ion-icon name="document-text-outline"></ion-icon> Télécharger le CV
+                </a>` : '<p>Aucun CV joint</p>'}
+                
+                ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" id="downloadLM">
+                    <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
+                </a>` : '<p>Aucune lettre jointe</p>'}
+            </div><br>
+
+            <br><hr><br>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <a href="/candidature/accepter/prof/${idCandidature}" 
+                   onclick="return confirm('Voulez-vous vraiment accepter cette candidature ?')"
+                   style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon> Accepter
+                </a>
+
+                <a href="/candidature/refuser/${idCandidature}" 
+                   onclick="return confirm('Voulez-vous vraiment refuser (et supprimer) cette candidature ?')"
+                   style="background-color: #dc3545; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    <ion-icon name="close-circle-outline"></ion-icon> Refuser
+                </a>
+
+            </div>`;
     }
-
     if (zoneInfos) zoneInfos.innerHTML = contenu;
+    if (zoneInfos2) zoneInfos2.innerHTML = contenu2; 
     document.getElementById('barreLatérale').style.width = '500px';
 }
 
@@ -158,6 +229,7 @@ function chargerContenu(choix) {
         zone.style.opacity = '1';
     });
 }
+
 </script>
 
 <br><br><br><br>

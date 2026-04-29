@@ -82,6 +82,9 @@ function ouvrirBarreLat(bouton) {
     const fin         = bouton.getAttribute('info_fin');
     const statut      = bouton.getAttribute('info_statut');
     const intitule    = bouton.getAttribute('info_intitule');
+    const statutEntreprise = bouton.getAttribute('info_statut_entreprise');
+    const statutProf       = bouton.getAttribute('info_statut_prof');
+    const remarqueProf = bouton.getAttribute('info_remarque_prof');
     
     // Nouveaux attributs
     const idStage     = bouton.getAttribute('info_idstage');
@@ -90,7 +93,7 @@ function ouvrirBarreLat(bouton) {
 
     const zoneTitre  = document.querySelector('#titre');
     const zoneInfos  = document.querySelector('#infosDynamiques');
-    const zoneInfos2 = document.querySelector('#infosDynamiques2'); // 
+    const zoneInfos2 = document.querySelector('#infosDynamiques2'); 
     const zoneStatut = document.getElementById('zoneStatut');
     const statutElt  = document.getElementById('statut');
 
@@ -107,11 +110,13 @@ function ouvrirBarreLat(bouton) {
             <br><hr><br>
             <div style="display: flex; justify-content: center; margin-top: 20px;">
                 <a href="/stage/supprimer/${idStage}" 
-                   onclick="return confirm('⚠️ Attention : Cela supprimera définitivement cette offre ET toutes les candidatures qui y sont liées. Voulez-vous continuer ?')"
-                   style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                onclick="return confirm('⚠️ Attention : Cela supprimera définitivement cette offre ET toutes les candidatures qui y sont liées. Voulez-vous continuer ?')"
+                style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
                     <ion-icon name="trash-outline"></ion-icon> Supprimer cette offre
                 </a>
-            </div>`;
+            </div>
+            `;
+
             
         if (zoneStatut) zoneStatut.style.display = 'none';
 
@@ -119,11 +124,32 @@ function ouvrirBarreLat(bouton) {
         const idCandidature = bouton.getAttribute('info_id_candidature');
         zoneTitre.innerText = intitule;
         
+         let statutTexte, statutCouleur;
+        if (statutEntreprise == 1 && statutProf == 1) {
+            statutTexte = "Acceptée"; statutCouleur = "green";
+        } else if (statutEntreprise == 1) {
+            statutTexte = "En attente prof"; statutCouleur = "orange";
+        } else if (statutProf == 1) {
+            statutTexte = "En attente entreprise"; statutCouleur = "orange";
+        } else {
+            statutTexte = "En attente"; statutCouleur = "grey";
+        }
+
         contenu = `<br><hr><br>
             <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
             <p><strong>Email :</strong> ${email}</p>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
-            <p><strong>Missions :</strong><br>${description}</p>`;
+            <p><strong>Missions :</strong><br>${description}</p>
+            <p style="font-size: 1rem; margin-top: 10px;">
+                <strong>Statut :</strong> 
+                <span style="color: ${statutCouleur};  float : none; font-size : 1rem; font-weight: bold;">${statutTexte}</span>
+            </p>
+            ${remarqueProf ? `<br><hr><br>
+                <h3>Commentaire du professeur :</h3>
+                <p style="color: grey; font-style: italic;">${remarqueProf}</p>
+            ` : ''}`;
+
+        if(zoneStatut) zoneStatut.style.display = 'none';
 
         // Zone des documents (déjà existante dans votre code)
         contenu2 = `
@@ -141,8 +167,8 @@ function ouvrirBarreLat(bouton) {
 
             <br><hr><br>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <a href="/candidature/accepter/${idCandidature}" 
-                   onclick="telechargerEtAccepter(event, this)"
+                <a href="/candidature/accepter/entreprise/${idCandidature}" 
+                   onclick="return confirm('Voulez-vous vraiment accepter cette candidature ?')"
                    style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
                     <ion-icon name="checkmark-circle-outline"></ion-icon> Accepter
                 </a>
@@ -153,6 +179,8 @@ function ouvrirBarreLat(bouton) {
                     <ion-icon name="close-circle-outline"></ion-icon> Refuser
                 </a>
             </div>`;
+        
+
     }
     if (zoneInfos) zoneInfos.innerHTML = contenu;
     if (zoneInfos2) zoneInfos2.innerHTML = contenu2; //  Injection sécurisée
@@ -198,18 +226,6 @@ function chargerContenu(choix) {
     });
 }
 
-function telechargerEtAccepter(event, element) {
-    // 1. On récupère les liens de téléchargement s'ils existent
-    const linkCV = document.getElementById('downloadCV');
-    const linkLM = document.getElementById('downloadLM');
-
-    // 2. On déclenche les téléchargements dans de nouveaux onglets/fenêtres
-    if (linkCV) window.open(linkCV.href, '_blank');
-    if (linkLM) window.open(linkLM.href, '_blank');
-
-    // 3. On laisse le lien principal (Accepter) continuer vers la route Laravel
-    return true; 
-}
 </script>
 
 <br><br><br><br>

@@ -76,12 +76,6 @@
 
             
             <div id="infosDynamiques"></div>
-            <br>
-
-            <div id="zoneStatut" style="display:none; margin-top: 20px;">
-                <p class="statut"><strong>Statut :</strong> <span class="statut" id="statut"></span></p>
-            </div>
-            <br><br>
 
 
             <div id="infosDynamiques2"></div>
@@ -130,8 +124,10 @@
         const statut = bouton.getAttribute('info_statut');
         const entreprise = bouton.getAttribute('info_entreprise');
         const intitule = bouton.getAttribute('info_intitule');
-
-        const cheminCV = bouton.getAttribute('info_cv'); // Récupère le chemin du CV
+        const statutEntreprise = bouton.getAttribute('info_statut_entreprise');
+        const statutProf       = bouton.getAttribute('info_statut_prof');
+        const remarqueProf = bouton.getAttribute('info_remarque_prof');
+        const cheminCV = bouton.getAttribute('info_cv');
         const cheminLM = bouton.getAttribute('info_lm');
 
         
@@ -140,7 +136,7 @@
         const zoneInfos2 = document.querySelector("#infosDynamiques2");
 
         const zoneStatut = document.getElementById("zoneStatut"); 
-        const statutElt = document.getElementById("statut");
+
 
         const storageUrl = "{{ asset('storage/') }}/";
         let contenu = ""; 
@@ -183,18 +179,49 @@
 
         } else if (type === 'candidatures') {
             
+            const idCandidature = bouton.getAttribute('info_id_candidature');
             zoneTitre.innerText = intitule;
 
+              let statutTexte, statutCouleur;
+            if (statutEntreprise == 1 && statutProf == 1) {
+                statutTexte = "Acceptée"; statutCouleur = "green";
+            } else if (statutEntreprise == 1) {
+                statutTexte = "En attente prof"; statutCouleur = "orange";
+            } else if (statutProf == 1) {
+                statutTexte = "En attente entreprise"; statutCouleur = "orange";
+            } else {
+                statutTexte = "En attente"; statutCouleur = "grey";
+            }
+
             contenu = `<br><hr><br>
-                ${prenom ? `<p><strong>Candidat :</strong> ${prenom} ${nom}</p>` : ''}
-                <p><strong>Entreprise :</strong> ${entreprise}</p>
-                <p><strong>Date :</strong> du ${debut} au ${fin}</p>
-                <p><strong>Description :</strong><br>${description}</p>
-            `;
+                <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
+                <p><strong>Email :</strong> ${email}</p>
+                <p><strong>Période :</strong> du ${debut} au ${fin}</p>
+                <p><strong>Missions :</strong><br>${description}</p>
+                <p style="font-size: 1rem; margin-top: 10px;">
+                    <strong>Statut :</strong> 
+                    <span style="color: ${statutCouleur};  float : none; font-size : 1rem; font-weight: bold;">${statutTexte}</span>
+                </p>`;
+
+            if(zoneStatut) zoneStatut.style.display = 'none';
             
 
                 contenu2 += `
-                <br><hr><br>
+                <br><hr>
+                <h3>Commentaire du professeur :</h3>
+                ${remarqueProf ? `<p style="color: grey; font-style: italic;">${remarqueProf}</p>` : '<p>Aucun commentaire pour l\'instant.</p>'}
+                
+                <form action="/candidature/commenter/${idCandidature}" method="POST" style="margin-top: 15px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <textarea name="remarque" rows="4" placeholder="Écrire un commentaire..." 
+                        style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; resize: vertical;"
+                    >${remarqueProf ?? ''}</textarea>
+                    <button type="submit" 
+                        style="margin-top: 10px; background-color: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
+                        <ion-icon name="save-outline"></ion-icon> Enregistrer le commentaire
+                    </button>
+                </form>
+                <br><hr>
                 <h3>Documents joints :</h3>
                 <div style="margin-top: 10px;">
                     ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" >
@@ -208,33 +235,27 @@
 
 
 
-
-
-
-                const idCandidature = bouton.getAttribute('info_id_candidature');
-
                 contenu2 += `
-                        <br><hr><br>
-                        <div style="display: flex; justify-content: center;">
-                            <a href="/candidature/supprimer/${idCandidature}" 
-                            onclick="return confirm('Voulez-vous vraiment supprimer cette candidature ?')"
-                            style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                                <ion-icon name="trash-outline"></ion-icon> Supprimer la candidature
-                            </a>
-                        </div>
-                    `;
-
-
-                statutElt.innerText = (statut == 1) ? "Validée" : (statut == 3 ? "Refusée" : "En cours");
-                statutElt.style.color = (statut == 1) ? "green" : (statut == 3 ? "red" : "orange");
-                statutElt.style.fontWeight = "bold";      
-                statutElt.style.padding = "0px 3px";    
-                statutElt.style.fontSize = "1rem";
-                if(zoneStatut) zoneStatut.style.display = "block";
-
-
-
-            
+                    <br><hr><br>
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;">
+                        <a href="/candidature/accepter/entreprise/${idCandidature}" 
+                        onclick="return confirm('Valider côté entreprise ?')"
+                        style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon> Valider entreprise
+                        </a>
+                        <a href="/candidature/accepter/prof/${idCandidature}" 
+                        onclick="return confirm('Valider côté professeur ?')"
+                        style="background-color: #17a2b8; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon> Valider prof
+                        </a>
+                        <a href="/candidature/supprimer/${idCandidature}" 
+                        onclick="return confirm('Voulez-vous vraiment supprimer cette candidature ?')"
+                        style="background-color: #dc3545; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                            <ion-icon name="trash-outline"></ion-icon> Supprimer
+                        </a>
+                    </div>
+                `;
+           
             
             
             
