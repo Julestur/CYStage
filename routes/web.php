@@ -181,6 +181,19 @@ Route::middleware(['check.connexion'])->group(function () {
 
 
 
+
+    // STATUT D'UNE CANDIDATURE
+    Route::get('/candidature/accepter/entreprise/{id}', [OPTION_ajoutCandidatureController::class, 'Accepter_Candidature_Entreprise']);
+    Route::get('/candidature/accepter/prof/{id}',       [OPTION_ajoutCandidatureController::class, 'Accepter_Candidature_Prof']);
+    Route::get('/candidature/accepter/{id}', [OPTION_ajoutCandidatureController::class, 'Accepter_Candidature'])->name('candidature.accepter');
+   
+    Route::get('/candidature/refuser/{id}', [OPTION_ajoutCandidatureController::class, 'Refuser_Candidature'])->name('candidature.refuser');
+    
+    //COMMENTAIRE D'UNE CANDIDATURE
+    Route::post('/candidature/commenter/{id}', [OPTION_ajoutCandidatureController::class, 'Commenter_Candidature'])->name('candidature.commenter');
+    
+    
+    
     // SUPRESSION D'UNE CANDIDATURE
     Route::get('/candidature/supprimer/{id}', [App\Http\Controllers\OPTION_ajoutCandidatureController::class, 'Supprimer_Candidature'])
     ->name('candidature.supprimer');
@@ -193,17 +206,6 @@ Route::middleware(['check.connexion'])->group(function () {
 
 
 
-    // --------------------------------------------------------------------------------------------------------------------------------------
-    // ------------------------------ GESTION DES PROBLEMES DE MDP --------------------------------------------------------------------------
-    // --------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-        // Routes pour la gestion des candidatures par l'entreprise
-  // Routes pour la gestion des candidatures par l'entreprise
-    Route::get('/candidature/accepter/{id}', [OPTION_ajoutCandidatureController::class, 'Accepter_Candidature'])->name('candidature.accepter');
-    Route::get('/candidature/refuser/{id}', [OPTION_ajoutCandidatureController::class, 'Refuser_Candidature'])->name('candidature.refuser');
 });
 
 
