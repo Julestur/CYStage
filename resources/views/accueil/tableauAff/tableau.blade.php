@@ -15,7 +15,7 @@
         <a href="{{ route('inscriptionAdmin.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
     @elseif($choix == 'entreprise')
         <h2 class="titreInfo">Liste des entreprises</h2>
-        <a href="#" class="boutonAjout">+ Ajouter</a>
+        <a href="{{ route('inscriptionAdmin.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
     @elseif($choix == 'professionnel')
         <h2 class="titreInfo">Liste des professionnels</h2>
         <a href="{{ route('inscriptionAdmin.Etape1_VU') }}" class="boutonAjout">+ Ajouter</a>
@@ -44,8 +44,20 @@
                 {{-- Lignes corrigées ci-dessous avec l'opérateur ?? pour éviter l'erreur Undefined property --}}
                 @elseif($choix == 'stage' || $choix == 'mes_offres') <td>{{ $l->intitule }}</td><td>{{ $l->nomEntreprise ?? 'Mon entreprise' }}</td><td>{{ $l->dateDebut }}</td>
                 @elseif($choix == 'candidatures')
-                    <td>{{ $l->intitule }}</td><td>{{ $l->nomEntreprise ?? 'Mon entreprise' }}</td><td>{{ $l->prenom }} {{ $l->nom }}</td>
-                    <td><ion-icon name="{{ $l->numStatut == 1 ? 'checkmark-circle' : ($l->numStatut == 3 ? 'close-circle' : 'send') }}-outline"></ion-icon></td>
+                <td>{{ $l->intitule }}</td>
+                <td>{{ $l->nomEntreprise ?? 'Mon entreprise' }}</td>
+                <td>{{ $l->prenom }} {{ $l->nom }}</td>
+                <td>
+                    @if(($l->statut_entreprise ?? 0) == 1 && ($l->statut_prof ?? 0) == 1)
+                        <ion-icon name="checkmark-circle-outline" style="color:green"></ion-icon> Acceptée
+                    @elseif(($l->statut_entreprise ?? 0) == 1)
+                        <ion-icon name="time-outline" style="color:orange"></ion-icon> Attente prof
+                    @elseif(($l->statut_prof ?? 0) == 1)
+                        <ion-icon name="time-outline" style="color:orange"></ion-icon> Attente entreprise
+                    @else
+                        <ion-icon name="send-outline" style="color:grey"></ion-icon> En attente
+                    @endif
+                </td>
                 @elseif($choix == 'prof') <td>{{ $l->nom }} {{ $l->prenom }}</td><td>{{ $l->email }}</td>
                 @elseif($choix == 'entreprise') <td>{{ $l->nom }}</td>
                 @elseif($choix == 'professionnel') <td>{{ $l->nom }} {{ $l->prenom }}</td><td>{{ $l->email }}</td><td>{{ $l->nomEntreprise ?? 'Mon entreprise' }}</td>
@@ -71,6 +83,9 @@
                             info_cv="{{ $l->CV ?? '' }}" 
                             info_lm="{{ $l->LettreMotivation ?? '' }}"
                             info_description="{{ $l->stageDetail ?? 'Aucune description disponible.' }}"
+                            info_statut_entreprise="{{ $l->statut_entreprise ?? 0 }}"
+                            info_statut_prof="{{ $l->statut_prof ?? 0 }}" 
+                            info_remarque_prof="{{ $l->Remarque_Prof ?? '' }}"
                         @endif
 
                         {{-- Ligne corrigée ci-dessous --}}
