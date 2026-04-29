@@ -90,7 +90,20 @@ class accueilController extends Controller{
                             ->join('stage as s', 'c.idStage', '=', 's.idStage')
                             ->join('entreprise as e', 'c.idEntreprise', '=', 'e.idEntreprise')
                             ->join('utilisateur as u', 'c.idUtilisateur', '=', 'u.idUtilisateur')
-                            ->select('c.idCandidature','s.idStage','e.idEntreprise','s.intitule', 'e.nom as nomEntreprise', 'u.nom', 'u.prenom', 'c.statut as numStatut', 's.dateDebut', 's.dateFin', 's.detail as stageDetail','c.CV','c.LettreMotivation')
+                            ->select('c.idCandidature',
+                                    's.idStage',
+                                    'e.idEntreprise',
+                                    's.intitule', 
+                                    'e.nom as nomEntreprise', 
+                                    'u.nom', 'u.prenom', 
+                                    'c.statut as numStatut', 
+                                    'c.statut_entreprise', 
+                                    'c.statut_prof', 
+                                    'c.Remarque_Prof',
+                                    's.dateDebut', 
+                                    's.dateFin', 
+                                    's.detail as stageDetail',
+                                    'c.CV','c.LettreMotivation')
                             ->get(),
         };
 
@@ -158,10 +171,13 @@ class accueilController extends Controller{
             'c.LettreMotivation', 
             'c.statut as info_statut',
             'c.statut as numStatut',
+            'c.statut_entreprise',
+            'c.statut_prof',
             's.intitule',
             'e.nom as nomEntreprise',
             'u.nom',     // Maintenant 'u' est reconnu grâce au leftJoin
             'u.prenom',  // Maintenant 'u' est reconnu
+            'c.Remarque_Prof',
             's.dateDebut', 
             's.dateFin',
             's.detail as description'
@@ -269,6 +285,9 @@ class accueilController extends Controller{
                     's.intitule',
                     'u.nom', 'u.prenom', 'u.email',
                     'c.statut as numStatut',
+                    'c.Remarque_Prof',
+                    'c.statut_entreprise', 
+                    'c.statut_prof', 
                     's.dateDebut', 's.dateFin',
                     's.detail as stageDetail'
                 )
@@ -327,10 +346,16 @@ class accueilController extends Controller{
                             ->join('entreprise as e', 'c.idEntreprise', '=', 'e.idEntreprise')
                             ->join('utilisateur as u','c.idUtilisateur','=', 'u.idUtilisateur')
                             ->select(
+                                'c.idCandidature',
+                                'c.CV', 
+                                'c.LettreMotivation',
                                 's.intitule',
                                 'e.nom as nomEntreprise',
-                                'u.nom', 'u.prenom',
+                                'u.nom', 'u.prenom', 'u.email',
                                 'c.statut as numStatut',
+                                'c.Remarque_Prof',
+                                'c.statut_entreprise', 
+                                'c.statut_prof', 
                                 's.dateDebut', 's.dateFin',
                                 's.detail as stageDetail'
                             )

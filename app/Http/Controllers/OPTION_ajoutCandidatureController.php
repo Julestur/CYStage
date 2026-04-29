@@ -144,17 +144,31 @@ class OPTION_ajoutCandidatureController extends Controller
         }
     }
 
-
-
-    public function Accepter_Candidature($id) {
-    // On passe le statut à 1 (Accepté/Vert)
-    DB::table('candidature')->where('idCandidature', $id)->update(['statut' => 1]);
-        
-        return back()->with('success', 'Candidature acceptée !');
+    public function Accepter_Candidature_Entreprise($id) {
+        DB::table('candidature')->where('idCandidature', $id)
+            ->update(['statut_entreprise' => 1]);
+        return back()->with('success', 'Candidature validée côté entreprise !');
     }
 
+    public function Accepter_Candidature_Prof($id) {
+        DB::table('candidature')->where('idCandidature', $id)
+            ->update(['statut_prof' => 1]);
+        return back()->with('success', 'Candidature validée côté professeur !');
+    }
+
+    public function Commenter_Candidature(Request $request, $id) {
+        $request->validate([
+            'remarque' => 'required|string|max:1000',
+        ]);
+
+        DB::table('candidature')->where('idCandidature', $id)
+            ->update(['Remarque_Prof' => $request->remarque]);
+
+        return back()->with('success', 'Commentaire enregistré !');
+    }
+
+
     public function Refuser_Candidature($id) {
-        // On utilise votre logique de suppression existante pour supprimer proprement
         return $this->Supprimer_Candidature($id);
     }
 }
