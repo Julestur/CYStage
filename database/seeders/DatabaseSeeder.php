@@ -43,11 +43,19 @@ class DatabaseSeeder extends Seeder
         ['idClasse' => 8,'nom' => 'ING3 GI'],
         ]);
 
+
+
+    # --------------------------------------------------------------------------------------------------------------
+    # ------------ ENTREPRISES -------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------
+
+
+
+
     DB::table('entreprise')->insert([
         'idEntreprise' => 1,
         'nom' => 'CY Tech',
     ]);
-
 
 
     DB::table('entreprise')->insert([
@@ -55,77 +63,94 @@ class DatabaseSeeder extends Seeder
         'nom' => 'Thalès',
     ]);
 
+    DB::table('entreprise')->insert([
+        'idEntreprise' => 3,
+        'nom' => 'Capgemini',
+    ]);
+
+
+
+
+    # --------------------------------------------------------------------------------------------------------------
+    # ------------ UTILISATEURS ------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------
+
+
+
+    // ADMINISTRATEUR
     DB::table('utilisateur')->insert([
-        'nom' => 'Jules',
-        'prenom' => 'Jules',
-        'email' => 'ju2ju@outlook.fr',
-        'identifiant' => 'jules',
-        'mdp' => Hash::make('jules'),
+        'nom' => 'Admin',
+        'prenom' => 'Admin',
+        'email' => 'Admin@Admin.fr',
+        'identifiant' => 'Admin',
+        'mdp' => Hash::make('Admin'),
         'idStatut' => 1,
         'idClasse' => 3,
         'pdp' => 'profil.png',
         'mdp_tmp' => '',
     ]);
 
-
+    // ETUDIANT
     DB::table('utilisateur')->insert([
-        'nom' => 'Jules2',
-        'prenom' => 'Jules2',
-        'email' => 'ju2ju2@outlook.fr',
-        'identifiant' => 'jules2',
-        'mdp' => Hash::make('jules2'),
+        'nom' => 'Ehrmann',
+        'prenom' => 'Esteban',
+        'email' => 'Ehrmann.Esteban@CYStage.fr',
+        'identifiant' => 'Esteban',
+        'mdp' => Hash::make('Esteban'),
         'idStatut' => 2,
         'idClasse' => 3,
         'pdp' => 'profil.png',
         'mdp_tmp' => '',
     ]);
 
-        DB::table('utilisateur')->insert([
-        'nom' => 'Estezeub',
-        'prenom' => 'Estezeub',
-        'email' => 'Estezeub@outlook.fr',
-        'identifiant' => 'Estezeub',
-        'mdp' => Hash::make('Estezeub'),
-        'idStatut' => 2,
-        'idClasse' => 3,
-        'pdp' => 'profil.png',
-        'mdp_tmp' => '',
-    ]);
-
-
-        DB::table('utilisateur')->insert([
-        'nom' => 'Tuyau',
-        'prenom' => 'Tuyau',
-        'email' => 'Tuyau@outlook.fr',
-        'identifiant' => 'Tuyau',
-        'mdp' => Hash::make('Tuyau'),
-        'idStatut' => 2,
-        'idClasse' => 3,
-        'pdp' => 'profil.png',
-        'mdp_tmp' => '',
-    ]);
-
-
-        DB::table('utilisateur')->insert([
-        'nom' => 'Jul',
-        'prenom' => 'Jul',
-        'email' => 'jul@outlook.fr',
-        'identifiant' => 'jul',
-        'mdp' => Hash::make('jul'),
-        'idStatut' => 2,
-        'idClasse' => 3,
-        'pdp' => 'profil.png',
-        'mdp_tmp' => '',
-    ]);
-
-
-
+    // ETUDIANT
     DB::table('utilisateur')->insert([
-        'nom' => 'Jul2',
-        'prenom' => 'Jul2',
-        'email' => 'jul2@outlook.fr',
-        'identifiant' => 'jul2',
-        'mdp' => Hash::make('jul2'),
+        'nom' => 'Preto',
+        'prenom' => 'Tilio',
+        'email' => 'Tilio.Preto@CYStage.fr',
+        'identifiant' => 'Tilio',
+        'mdp' => Hash::make('Tilio'),
+        'idStatut' => 2,
+        'idClasse' => 3,
+        'pdp' => 'profil.png',
+        'mdp_tmp' => '',
+    ]);
+
+
+    // ETUDIANT
+    DB::table('utilisateur')->insert([
+        'nom' => 'Turchi',
+        'prenom' => 'Jules',
+        'email' => 'Turchi.Jules@CYStage.fr',
+        'identifiant' => 'Jules',
+        'mdp' => Hash::make('Jules'),
+        'idStatut' => 2,
+        'idClasse' => 3,
+        'pdp' => 'profil.png',
+        'mdp_tmp' => '',
+    ]);
+
+    // ETUDIANT
+    DB::table('utilisateur')->insert([
+        'nom' => 'Etudiant',
+        'prenom' => 'Etudiant',
+        'email' => 'Etudiant@Etudiant.fr',
+        'identifiant' => 'Etudiant',
+        'mdp' => Hash::make('Etudiant'),
+        'idStatut' => 2,
+        'idClasse' => 3,
+        'pdp' => 'profil.png',
+        'mdp_tmp' => '',
+    ]);
+
+
+    // PROF
+    DB::table('utilisateur')->insert([
+        'nom' => 'Prof',
+        'prenom' => 'Prof',
+        'email' => 'Prof@Prof.fr',
+        'identifiant' => 'Prof',
+        'mdp' => Hash::make('Prof'),
         'idStatut' => 3,
         'idClasse' => 3,
         'pdp' => 'profil.png',
@@ -133,57 +158,28 @@ class DatabaseSeeder extends Seeder
     ]);
 
 
+    // ENTREPRISE
     DB::table('utilisateur')->insert([
-        'nom' => 'Jules3',
-        'prenom' => 'Jules3',
-        'email' => 'ju2ju3@outlook.fr',
-        'identifiant' => 'jules3',
-        'mdp' => Hash::make('jules3'),
-        'idStatut' => 3,
-        'idClasse' => 3,
-        'pdp' => 'profil.png',
-        'mdp_tmp' => '',
-    ]);
-
-
-    DB::table('utilisateur')->insert([
-        'nom' => 'Jules4',
-        'prenom' => 'Jules4',
-        'email' => 'ju2ju4@outlook.fr',
-        'identifiant' => 'jules4',
-        'mdp' => Hash::make('jules4'),
+        'nom' => 'Entreprise',
+        'prenom' => 'Entreprise',
+        'email' => 'Entreprise@Entreprise.fr',
+        'identifiant' => 'Entreprise',
+        'mdp' => Hash::make('Entreprise'),
         'idStatut' => 4,
         'idClasse' => 3,
-        'idEntreprise' => 1,
         'pdp' => 'profil.png',
         'mdp_tmp' => '',
     ]);
+
+
+    # --------------------------------------------------------------------------------------------------------------
+    # ------------ STAGE -------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------
 
 
 
         DB::table('stage')->insert([
         'idStage' => '1',
-        'intitule' => 'Pragramation Python',
-        'detail' => 'Stage de plusieurs semaine pour apprendre le dev python ',
-        'dateDebut' => '2026-03-01',
-        'dateFin' => '2026-05-01',
-        'idEntreprise' => 1,
-    ]);
-
-     DB::table('stage')->insert([
-        'idStage' => '3',
-        'intitule' => 'test',
-        'detail' => 'test ',
-        'dateDebut' => '2026-03-01',
-        'dateFin' => '2026-05-01',
-        'idEntreprise' => 1,
-    ]);
-
-
-
-
-        DB::table('stage')->insert([
-        'idStage' => '2',
         'intitule' => 'Pragramation Python',
         'detail' => 'Stage de plusieurs semaine pour apprendre le dev python ',
         'dateDebut' => '2026-03-01',
@@ -192,22 +188,47 @@ class DatabaseSeeder extends Seeder
     ]);
 
 
-    DB::table('candidature')->insert([
-        'idStage' => '1',
-        'idEntreprise' => '1',
-        'idUtilisateur' => '1',
+        DB::table('stage')->insert([
+        'idStage' => '2',
+        'intitule' => 'Stage dev web',
+        'detail' => 'Stage de plusieurs semaine pour apprendre le dev web ',
+        'dateDebut' => '2026-03-01',
+        'dateFin' => '2026-05-01',
+        'idEntreprise' => 3,
     ]);
 
 
 
-     DB::table('candidature')->insert([
-        'idStage' => '2',
-        'idEntreprise' => '2',
+
+
+
+
+    DB::table('candidature')->insert([
+        'CV' => 'Stockage/CV/EstebanCV.pdf',
+        'LettreMotivation' => 'Stockage/Lettre_Motiv/EstebanLettre.pdf',
+        'idStage' => '1',
+        'idEntreprise' => '1',
         'idUtilisateur' => '2',
     ]);
 
 
 
+    DB::table('candidature')->insert([
+        'CV' => 'Stockage/CV/TilioCV.pdf',
+        'LettreMotivation' => 'Stockage/Lettre_Motiv/TilioLettre.pdf',
+        'idStage' => '2',
+        'idEntreprise' => '2',
+        'idUtilisateur' => '3',
+    ]);
+
+
+    DB::table('candidature')->insert([
+        'CV' => 'Stockage/CV/JulesCV.pdf',
+        'LettreMotivation' => 'Stockage/Lettre_Motiv/JulesLettre.pdf',
+        'idStage' => '2',
+        'idEntreprise' => '2',
+        'idUtilisateur' => '4',
+    ]);
 
     }
 }
