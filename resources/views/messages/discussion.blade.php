@@ -113,8 +113,8 @@
 
         chargerMessages(idCandidature);
 
-        if (intervalActif) clearInterval(intervalActif);
-        intervalActif = setInterval(() => chargerMessages(idCandidature), 5000);
+        /*if (intervalActif) clearInterval(intervalActif);
+        intervalActif = setInterval(() => chargerMessages(idCandidature), 5000);*/
     }
 
     function afficherNomFichier(idCandidature) {
@@ -160,7 +160,7 @@ function chargerMessages(idCandidature) {
                                 <strong>${m.prenom} ${m.nom}</strong><br>
                                 ${m.contenu ? m.contenu : ''}
                                 ${fichierHtml}
-                                <br><small style="opacity:0.7;">${new Date(m.created_at).toLocaleTimeString()}</small>
+                                <br><small style="opacity:0.7;">${new Date(m.created_at).toLocaleTimeString('fr-FR')}</small>
                             </span>
                         </div>
                     `;
