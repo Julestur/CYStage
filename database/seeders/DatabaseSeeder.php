@@ -167,6 +167,7 @@ class DatabaseSeeder extends Seeder
         'mdp' => Hash::make('Entreprise'),
         'idStatut' => 4,
         'idClasse' => 3,
+        'idEntreprise'=>3,
         'pdp' => 'profil.png',
         'mdp_tmp' => '',
     ]);
@@ -207,7 +208,7 @@ class DatabaseSeeder extends Seeder
         'CV' => 'Stockage/CV/EstebanCV.pdf',
         'LettreMotivation' => 'Stockage/Lettre_Motiv/EstebanLettre.pdf',
         'idStage' => '1',
-        'idEntreprise' => '1',
+        'idEntreprise' => '3',
         'idUtilisateur' => '2',
     ]);
 
@@ -217,7 +218,7 @@ class DatabaseSeeder extends Seeder
         'CV' => 'Stockage/CV/TilioCV.pdf',
         'LettreMotivation' => 'Stockage/Lettre_Motiv/TilioLettre.pdf',
         'idStage' => '2',
-        'idEntreprise' => '2',
+        'idEntreprise' => '3',
         'idUtilisateur' => '3',
     ]);
 
@@ -226,7 +227,7 @@ class DatabaseSeeder extends Seeder
         'CV' => 'Stockage/CV/JulesCV.pdf',
         'LettreMotivation' => 'Stockage/Lettre_Motiv/JulesLettre.pdf',
         'idStage' => '2',
-        'idEntreprise' => '2',
+        'idEntreprise' => '3',
         'idUtilisateur' => '4',
     ]);
 
