@@ -462,6 +462,7 @@ td {
     top: 0;
     right: 0;
     background-color: #ffffff;
+    overflow: auto;
 
 }
 
