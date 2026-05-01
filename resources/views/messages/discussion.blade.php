@@ -23,38 +23,38 @@
 
             @if($grade === 'Etudiant')
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_entreprise', 'Entreprise')" class="bouton_choix">
-                    🏢 Discuter avec l'entreprise
+                    Discuter avec l'entreprise
                 </button>
             
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_profs', 'Professeur')" class="bouton_choix" style="margin-left:10px;">
-                    👨‍🏫 Discuter avec le professeur
+                    Discuter avec le professeur
                 </button>
 
             @elseif($grade === 'Entreprise')
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_entreprise', 'Étudiant')" class="bouton_choix">
-                    👨‍🎓 Discuter avec l'étudiant
+                    Discuter avec l'étudiant
                 </button>
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'entreprise_profs', 'Professeurs')" class="bouton_choix" style="margin-left:10px;">
-                    👨‍🏫 Discuter avec les professeurs
+                    Discuter avec les professeurs
                 </button>
 
             @elseif($grade === 'Professeur')
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_profs', 'Étudiant')" class="bouton_choix">
-                    👨‍🎓 Discuter avec l'étudiant
+                    Discuter avec l'étudiant
                 </button>
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'entreprise_profs', 'Entreprise')" class="bouton_choix" style="margin-left:10px;">
-                    🏢 Discuter avec l'entreprise
+                    Discuter avec l'entreprise
                 </button>
 
             @elseif($grade === 'Admin')
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_entreprise', 'Étudiant ↔ Entreprise')" class="bouton_choix">
-                    👨‍🎓🏢 Étudiant ↔ Entreprise
+                    Étudiant ↔ Entreprise
                 </button>
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'etudiant_profs', 'Étudiant ↔ Profs')" class="bouton_choix" style="margin-left:10px;">
-                    👨‍🎓👨‍🏫 Étudiant ↔ Profs
+                    Étudiant ↔ Profs
                 </button>
                 <button onclick="ouvrirChat({{ $c->idCandidature }}, {{ $idUtilisateur }}, 'entreprise_profs', 'Entreprise ↔ Profs')" class="bouton_choix" style="margin-left:10px;">
-                    🏢👨‍🏫 Entreprise ↔ Profs
+                    Entreprise ↔ Profs
                 </button>
             @endif
 
