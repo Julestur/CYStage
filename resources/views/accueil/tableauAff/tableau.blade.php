@@ -86,6 +86,9 @@
                             info_statut_entreprise="{{ $l->statut_entreprise ?? 0 }}"
                             info_statut_prof="{{ $l->statut_prof ?? 0 }}" 
                             info_remarque_prof="{{ $l->Remarque_Prof ?? '' }}"
+                            info_convention="{{ $l->Convention ?? '' }}"                                        
+                            info_verif_convention_entreprise="{{ $l->estVerif_Convention_Entreprise ?? 0 }}"    
+                            info_verif_convention_prof="{{ $l->estVerif_Convention_Prof ?? 0 }}"
                         @endif
 
                         {{-- Ligne corrigée ci-dessous --}}
