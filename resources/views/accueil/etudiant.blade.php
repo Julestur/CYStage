@@ -199,8 +199,17 @@ function ouvrirBarreLat(bouton) {
                 
                 <form action="/candidature/convention/${idCandidature}" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="file" name="convention" accept=".pdf"
-                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    
+                    <input type="file" name="convention" accept=".pdf" id="conventionInput_${idCandidature}"
+                        style="display:none;"
+                        onchange="document.getElementById('nomConvention_${idCandidature}').innerText = this.files[0] ? this.files[0].name : 'Aucun fichier sélectionné'">
+                    
+                    <label for="conventionInput_${idCandidature}"
+                        style="display:flex; align-items:center; gap:8px; cursor:pointer; width:100%; font-size: 1rem; padding:10px; border:1px solid #ccc; border-radius:5px; background:#f9f9f9;">
+                        <ion-icon name="document-outline"></ion-icon>
+                        <span style = "font-size : 1rem;" id="nomConvention_${idCandidature}">Aucun fichier sélectionné</span>
+                    </label>
+                    
                     <button type="submit"
                         style="margin-top: 10px; background-color: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
                         <ion-icon name="cloud-upload-outline"></ion-icon> Déposer ma convention
