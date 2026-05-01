@@ -15,7 +15,7 @@ use App\Http\Controllers\OPTION_suppressionUtilisateurController;
 use App\Http\Controllers\OPTION_ajoutOffreStageController;
 use App\Http\Controllers\OPTION_ajoutCandidatureController;
 use App\Http\Controllers\MDP_OublieController;
-
+use App\Http\Controllers\MessageController;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------
@@ -204,9 +204,21 @@ Route::middleware(['check.connexion'])->group(function () {
 
 
 
+    // Upload convention par l'étudiant
+    Route::post('/candidature/convention/{id}', [OPTION_ajoutCandidatureController::class, 'Upload_Convention'])->name('candidature.convention');
+
+    // Signer convention (entreprise et prof uploadent leur version signée)
+    Route::post('/candidature/convention/signer/entreprise/{id}', [OPTION_ajoutCandidatureController::class, 'Signer_Convention_Entreprise'])->name('candidature.convention.signer.entreprise');
+    Route::post('/candidature/convention/signer/prof/{id}', [OPTION_ajoutCandidatureController::class, 'Signer_Convention_Prof'])->name('candidature.convention.signer.prof');
 
 
-});
+    // ENVOYER UN MESSAGE
+    Route::get('/messages', [MessageController::class, 'discussion'])->name('messages.discussion');
+    Route::post('/message/envoyer', [MessageController::class, 'Envoyer_Message'])->name('message.envoyer');
+    Route::get('/message/recuperer/{idCandidature}/{canal}', [MessageController::class, 'Recuperer_Messages'])->name('message.recuperer');
+
+
+    });
 
 
 
