@@ -103,7 +103,11 @@ class accueilController extends Controller{
                                     's.dateDebut', 
                                     's.dateFin', 
                                     's.detail as stageDetail',
-                                    'c.CV','c.LettreMotivation')
+                                    'c.CV','c.LettreMotivation',
+                                    'c.Convention',
+                                    'c.estVerif_Convention_Entreprise',
+                                    'c.estVerif_Convention_Prof'
+                                    )
                             ->get(),
         };
 
@@ -175,12 +179,15 @@ class accueilController extends Controller{
             'c.statut_prof',
             's.intitule',
             'e.nom as nomEntreprise',
-            'u.nom',     // Maintenant 'u' est reconnu grâce au leftJoin
-            'u.prenom',  // Maintenant 'u' est reconnu
+            'u.nom',   
+            'u.prenom',  
             'c.Remarque_Prof',
             's.dateDebut', 
             's.dateFin',
-            's.detail as description'
+            's.detail as description',
+            'c.Convention',
+            'c.estVerif_Convention_Entreprise',
+            'c.estVerif_Convention_Prof'
         )
         ->get();
         }
@@ -261,7 +268,7 @@ class accueilController extends Controller{
                                     ->count(),
             'nbEnAttente'    => DB::table('candidature')
                                     ->where('idEntreprise', $idEntreprise)
-                                    ->where('statut', 2)
+                                    ->where('statut_entreprise', 0)
                                     ->count(),
         ];
  
@@ -289,8 +296,11 @@ class accueilController extends Controller{
                     'c.statut_entreprise', 
                     'c.statut_prof', 
                     's.dateDebut', 's.dateFin',
-                    's.detail as stageDetail'
-                )
+                    's.detail as stageDetail',
+                    'c.Convention',
+                    'c.estVerif_Convention_Entreprise',
+                    'c.estVerif_Convention_Prof'
+                    )
                 ->orderBy('c.idCandidature', 'desc')
                 ->get();
         }
@@ -357,7 +367,10 @@ class accueilController extends Controller{
                                 'c.statut_entreprise', 
                                 'c.statut_prof', 
                                 's.dateDebut', 's.dateFin',
-                                's.detail as stageDetail'
+                                's.detail as stageDetail',
+                                'c.Convention',
+                                'c.estVerif_Convention_Entreprise',
+                                'c.estVerif_Convention_Prof'
                             )
                             ->get(),
         };
