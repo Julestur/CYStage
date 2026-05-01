@@ -43,7 +43,12 @@
                         <ion-icon name="person-circle-outline"></ion-icon>
                     </a>
                 </li>
-                
+                <li>
+                    <a href="{{ route('messages.discussion') }}">
+                        <span>Messages</span>
+                        <ion-icon name="chatbubbles-outline"></ion-icon> 
+                    </a>
+                </li>
                 @if(strtolower(Session::get('grade')) == 'admin')
                     <li>
                         <a href="{{ route('inscriptionAdmin.Etape1_VU') }}">
