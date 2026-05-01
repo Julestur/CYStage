@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('LettreMotivation', 100)->nullable();
             $table->integer('estVerif_LettreMotivation')->default(0);
 
-            $table->string('Convention', 100)->nullable();
-            $table->integer('estVerif_Convention')->default(0);
+            $table->string('Convention', 255)->nullable();
+            $table->tinyInteger('estVerif_Convention_Entreprise')->default(0);  
+            $table->tinyInteger('estVerif_Convention_Prof')->default(0);   
 
             $table->string('Remarque_Entreprise', 1000)->nullable();
             $table->string('Remarque_Prof', 1000)->nullable();
@@ -37,6 +38,7 @@ return new class extends Migration
             $table->foreignId('idStage')->constrained('stage', 'idStage');
             $table->foreignId('idEntreprise')->nullable()->constrained('entreprise', 'idEntreprise');
             $table->foreignId('idUtilisateur')->nullable()->constrained('utilisateur', 'idUtilisateur');
+            $table->foreignId('idProf')->nullable()->constrained('utilisateur', 'idUtilisateur');
             
             $table->timestamps();
         });
