@@ -89,8 +89,9 @@ class OPTION_ajoutCandidatureController extends Controller
             'estVerif_CV'               => 0,
             'LettreMotivation'          => $Chemin_LM,
             'estVerif_LettreMotivation' => 0,
-            'Convention'                => 'En attente',
-            'estVerif_Convention'       => 0,
+            'Convention'                        => null,
+            'estVerif_Convention_Entreprise'    => 0,
+            'estVerif_Convention_Prof'          => 0,
             'Remarque_Entreprise'       => '',
             'Remarque_Prof'             => '',
             'idStage'                   => $requete->idStage,
@@ -171,4 +172,70 @@ class OPTION_ajoutCandidatureController extends Controller
     public function Refuser_Candidature($id) {
         return $this->Supprimer_Candidature($id);
     }
+
+
+    // L'étudiant upload sa convention
+    public function Upload_Convention(Request $request, $id) {
+        $request->validate([
+            'convention' => 'required|file|mimes:pdf|max:2048',
+        ], [
+            'convention.required' => 'Veuillez déposer votre convention.',
+            'convention.mimes'    => 'La convention doit être au format PDF.',
+            'convention.max'      => 'La convention ne doit pas dépasser 2 Mo.',
+        ]);
+
+        $chemin = $request->file('convention')->store('Stockage/Convention', 'public');
+
+        DB::table('candidature')->where('idCandidature', $id)
+            ->update(['Convention' => $chemin]);
+
+        return back()->with('success', 'Convention déposée avec succès !');
+    }
+
+    public function Signer_Convention_Entreprise(Request $request, $id) {
+        $request->validate([
+            'convention_signee' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+
+        $candidature = DB::table('candidature')->where('idCandidature', $id)->first();
+        if ($candidature->Convention) {
+            Storage::disk('public')->delete($candidature->Convention);
+        }
+
+    
+        $chemin = $request->file('convention_signee')->store('Stockage/Convention', 'public');
+
+        DB::table('candidature')->where('idCandidature', $id)->update([
+            'Convention'                     => $chemin,
+            'estVerif_Convention_Entreprise' => 1,
+        ]);
+
+        return back()->with('success', 'Convention signée par l\'entreprise !');
+    }
+
+    public function Signer_Convention_Prof(Request $request, $id) {
+        $request->validate([
+            'convention_signee' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+
+        $candidature = DB::table('candidature')->where('idCandidature', $id)->first();
+        if ($candidature->Convention) {
+            Storage::disk('public')->delete($candidature->Convention);
+        }
+
+
+        $chemin = $request->file('convention_signee')->store('Stockage/Convention', 'public');
+
+        DB::table('candidature')->where('idCandidature', $id)->update([
+            'Convention'              => $chemin,
+            'estVerif_Convention_Prof' => 1,
+        ]);
+
+        return back()->with('success', 'Convention signée par le professeur !');
+    }
+
+
+
 }

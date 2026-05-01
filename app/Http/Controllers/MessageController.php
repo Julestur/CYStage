@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 
 class MessageController extends Controller
 {
-    public function index(Request $request) {
+    public function discussion(Request $request) {
         if (!Session::get('connecte')) {
             return redirect('/')->withErrors(['error' => 'Veuillez vous connecter.']);
         }
@@ -59,7 +59,7 @@ class MessageController extends Controller
                 ->get();
         }
 
-        return view('messages.index', compact('candidatures', 'grade', 'prenom', 'idUtilisateur', 'profs'));
+        return view('messages.discussion', compact('candidatures', 'grade', 'prenom', 'idUtilisateur', 'profs'));
     }
 
    public function Envoyer_Message(Request $request) {
