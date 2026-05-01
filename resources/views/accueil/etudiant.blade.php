@@ -57,16 +57,12 @@
             <br><br>
 
 
-            <div id="infosDynamiques2"></div>
-
-            
-            <div id="infosDynamiques2"></div>
-            
+            <div id="infosDynamiques2"></div>            
             
           
         </div>
     </div>
-</div>
+
         
 
 
@@ -80,7 +76,7 @@
     <div class="tab_info" id="zoneAffTab">
         @include('accueil.tableauAff.tableau')
     </div>
-
+</div>
 <script>
 // ── Barre latérale ───────────────────────────────────────────────────────────
 
@@ -110,7 +106,10 @@ function ouvrirBarreLat(bouton) {
         const zoneInfos2 = document.querySelector("#infosDynamiques2");
 
         const zoneStatut = document.getElementById("zoneStatut"); 
-
+        const idCandidature = bouton.getAttribute('info_id_candidature');
+        const convention          = bouton.getAttribute('info_convention');
+        const verifConvEntreprise = bouton.getAttribute('info_verif_convention_entreprise');
+        const verifConvProf       = bouton.getAttribute('info_verif_convention_prof');
 
 
     
@@ -127,7 +126,7 @@ function ouvrirBarreLat(bouton) {
                 const idStage = bouton.getAttribute('info_idstage');
                 const idEntreprise = bouton.getAttribute('info_identreprise');
 
-                contenu += `<br><hr><br>
+                contenu += `<br><hr>
                 <p><strong>Entreprise :</strong> ${entreprise}</p>
                 <p><strong>Date :</strong> du ${debut} au ${fin}</p>
                 <p><strong>Description :</strong><br>${description}</p>
@@ -155,7 +154,7 @@ function ouvrirBarreLat(bouton) {
             statutTexte = "En attente"; statutCouleur = "grey";
         }
 
-        contenu = `<br><hr><br>
+        contenu = `<br><hr>
             <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
             <p><strong>Email :</strong> ${email}</p>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
@@ -164,7 +163,7 @@ function ouvrirBarreLat(bouton) {
                 <strong>Statut :</strong> 
                 <span style="color: ${statutCouleur};  float : none; font-size : 1rem; font-weight: bold;">${statutTexte}</span>
             </p>
-            ${remarqueProf ? `<br><hr><br>
+            ${remarqueProf ? `<hr><br>
                 <h3>Commentaire du professeur :</h3>
                 <p style="color: grey; font-style: italic;">${remarqueProf}</p>
             ` : ''}`;
@@ -173,7 +172,7 @@ function ouvrirBarreLat(bouton) {
             
 
                 contenu2 += `
-                <br><hr><br>
+                <br><hr>
                 <h3>Documents joints :</h3>
                 <div style="margin-top: 10px;">
                     ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" >
@@ -186,22 +185,41 @@ function ouvrirBarreLat(bouton) {
                 </div><br>`;
 
 
+        // Uniquement si acceptée des deux côtés
+        if (statutEntreprise == 1 && statutProf == 1) {
+            contenu2 += `
+               <hr>
+                <h3>Convention de stage :</h3>
+                ${convention ? `
+                    <p style="color: green;">✅ Convention déposée</p>
+                    <a href="${storageUrl}${convention}" target="_blank" class="bouton_telecharger">
+                        <ion-icon name="document-text-outline"></ion-icon> Voir ma convention
+                    </a><br><br>
+                ` : '<p>Aucune convention déposée pour l\'instant.</p>'}
+                
+                <form action="/candidature/convention/${idCandidature}" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="file" name="convention" accept=".pdf"
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit"
+                        style="margin-top: 10px; background-color: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
+                        <ion-icon name="cloud-upload-outline"></ion-icon> Déposer ma convention
+                    </button>
+                </form>
+            `;
+        }
 
 
-
-
-                const idCandidature = bouton.getAttribute('info_id_candidature');
-
-                contenu2 += `
-                        <br><hr><br>
-                        <div style="display: flex; justify-content: center;">
-                            <a href="/candidature/supprimer/${idCandidature}" 
-                            onclick="return confirm('Voulez-vous vraiment supprimer cette candidature ?')"
-                            style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                                <ion-icon name="trash-outline"></ion-icon> Supprimer la candidature
-                            </a>
-                        </div>
-                    `;
+        contenu2 += `
+        <br><hr>
+        <div style="display: flex; justify-content: center;">
+        <a href="/candidature/supprimer/${idCandidature}" 
+        onclick="return confirm('Voulez-vous vraiment supprimer cette candidature ?')"
+        style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            <ion-icon name="trash-outline"></ion-icon> Supprimer la candidature
+        </a>
+        </div>
+        `;
 
     }
 

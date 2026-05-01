@@ -96,6 +96,9 @@ function ouvrirBarreLat(bouton) {
     const zoneInfos2 = document.querySelector('#infosDynamiques2'); 
     const zoneStatut = document.getElementById('zoneStatut');
     const statutElt  = document.getElementById('statut');
+    const convention          = bouton.getAttribute('info_convention');
+    const verifConvEntreprise = bouton.getAttribute('info_verif_convention_entreprise');
+    const verifConvProf       = bouton.getAttribute('info_verif_convention_prof');
 
     const storageUrl = "{{ asset('storage/') }}/";
     let contenu = '';
@@ -151,6 +154,8 @@ function ouvrirBarreLat(bouton) {
 
         if(zoneStatut) zoneStatut.style.display = 'none';
 
+
+        
         // Zone des documents (déjà existante dans votre code)
         contenu2 = `
             <br><hr><br>
@@ -164,6 +169,27 @@ function ouvrirBarreLat(bouton) {
                     <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
                 </a>` : '<p>Aucune lettre jointe</p>'}
             </div><br>
+
+            ${convention ? `
+                <br><hr><br>
+                <h3>Convention de stage :</h3>
+                <a href="${storageUrl}${convention}" target="_blank" class="bouton_telecharger">
+                    <ion-icon name="document-text-outline"></ion-icon> Télécharger la convention
+                </a>
+                ${verifConvEntreprise == 1 ? '<p style="color:green; margin-top:10px;">✅ Vous avez déjà signé</p>' : `
+                <form action="/candidature/convention/signer/entreprise/${idCandidature}" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <p>Déposez votre version signée :</p>
+                    <input type="file" name="convention_signee" accept=".pdf"
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit"
+                        style="margin-top: 10px; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
+                        <ion-icon name="pencil-outline"></ion-icon> Signer la convention
+                    </button>
+                </form>`}
+            ` : '<p>Aucune convention déposée par l\'étudiant.</p>'}
+
+
 
             <br><hr><br>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">

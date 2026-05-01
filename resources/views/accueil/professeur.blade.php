@@ -93,7 +93,10 @@ function ouvrirBarreLat(bouton) {
     const zoneInfos2 = document.querySelector('#infosDynamiques2'); 
     const zoneStatut = document.getElementById('zoneStatut');
     const statutElt  = document.getElementById('statut');
-    
+    const convention          = bouton.getAttribute('info_convention');
+    const verifConvEntreprise = bouton.getAttribute('info_verif_convention_entreprise');
+    const verifConvProf       = bouton.getAttribute('info_verif_convention_prof');
+
     const storageUrl = "{{ asset('storage/') }}/";
     let contenu = '';
     let contenu2 = '';
@@ -131,7 +134,7 @@ function ouvrirBarreLat(bouton) {
             statutTexte = "En attente"; statutCouleur = "grey";
         }
 
-        contenu = `<br><hr><br>
+        contenu = `<br><hr>
             <p><strong>Candidat :</strong> ${prenom} ${nom}</p>
             <p><strong>Email :</strong> ${email}</p>
             <p><strong>Période :</strong> du ${debut} au ${fin}</p>
@@ -145,7 +148,7 @@ function ouvrirBarreLat(bouton) {
 
 
         contenu2 = `
-            <br><hr><br>
+            <hr>
                 <h3>Commentaire du professeur :</h3>
                 ${remarqueProf ? `<p style="color: grey; font-style: italic;">${remarqueProf}</p>` : '<p>Aucun commentaire pour l\'instant.</p>'}
                 
@@ -159,7 +162,7 @@ function ouvrirBarreLat(bouton) {
                         <ion-icon name="save-outline"></ion-icon> Enregistrer le commentaire
                     </button>
                 </form>
-            <br><hr><br>
+            <br><hr>
             <h3>Documents du candidat :</h3>
             <div style="margin-top: 10px;">
                 ${cheminCV ? `<a href="${storageUrl}${cheminCV}" target="_blank" class="bouton_telecharger" id="downloadCV">
@@ -169,9 +172,31 @@ function ouvrirBarreLat(bouton) {
                 ${cheminLM ? `<a href="${storageUrl}${cheminLM}" target="_blank" class="bouton_telecharger" id="downloadLM">
                     <ion-icon name="mail-outline"></ion-icon> Lettre de Motivation
                 </a>` : '<p>Aucune lettre jointe</p>'}
-            </div><br>
+            </div>
 
-            <br><hr><br>
+
+            ${convention ? `
+                <br><hr>
+                <h3>Convention de stage :</h3>
+                <a href="${storageUrl}${convention}" target="_blank" class="bouton_telecharger">
+                    <ion-icon name="document-text-outline"></ion-icon> Télécharger la convention
+                </a>
+                ${verifConvProf== 1 ? '<p style="color:green; margin-top:10px;">✅ Vous avez déjà signé</p>' : `
+                <form action="/candidature/convention/signer/prof/${idCandidature}" method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <p>Déposez votre version signée :</p>
+                    <input type="file" name="convention_signee" accept=".pdf"
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit"
+                        style="margin-top: 10px; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%;">
+                        <ion-icon name="pencil-outline"></ion-icon> Signer la convention
+                    </button>
+                </form>`}
+            ` : '<p>Aucune convention déposée par l\'étudiant.</p>'}
+
+
+
+            <br><hr>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
                 <a href="/candidature/accepter/prof/${idCandidature}" 
                    onclick="return confirm('Voulez-vous vraiment accepter cette candidature ?')"
