@@ -94,6 +94,7 @@
 
 <script>
     let chatActif = {};
+    let intervalActif = null;
     const monId = {{ $idUtilisateur }};
 
     function toggleConversations(idCandidature) {
@@ -111,6 +112,9 @@
         chatActif[idCandidature] = { idExpediteur, canal };
 
         chargerMessages(idCandidature);
+
+        /*if (intervalActif) clearInterval(intervalActif);
+        intervalActif = setInterval(() => chargerMessages(idCandidature), 5000);*/
     }
 
     function afficherNomFichier(idCandidature) {
@@ -123,7 +127,7 @@ function chargerMessages(idCandidature) {
     const { canal } = chatActif[idCandidature];
     const zone = document.getElementById('messages_' + idCandidature);
 
-
+    const etaitEnBas = zone.scrollTop + zone.clientHeight >= zone.scrollHeight - 50;
     fetch(`/message/recuperer/${idCandidature}/${canal}`)
         .then(r => r.json())
         .then(messages => {
@@ -162,6 +166,9 @@ function chargerMessages(idCandidature) {
                     `;
                 }).join('');
 
+            if (etaitEnBas) {
+                zone.scrollTop = zone.scrollHeight;
+            }
         });
 }
 
