@@ -166,7 +166,7 @@ Route::middleware(['check.connexion'])->group(function () {
     Route::post('/ajout-offre-stage', [OPTION_ajoutOffreStageController::class, 'Traitement_AjoutStage_Etape1'])->name('ajoutStage.Etape1_GESTION');
 
     //ETAPE 2 : Page de confirmation l'ajout d'une nouvelle offre de stage
-    Route::get('/ajout-offre-stage/confirmation', [OPTION_ajoutOffreStageController::class, 'Vu_InscriptionAdmin_Etape2'])->name('inscriptionAdmin.Etape2_VU');
+    Route::get('/ajout-offre-stage/confirmation', [OPTION_ajoutOffreStageController::class, 'Vu_InscriptionAdmin_Etape2'])->name('ajoutStage.Etape2_VU');
 
 
 
@@ -177,7 +177,7 @@ Route::middleware(['check.connexion'])->group(function () {
     Route::post('/ajout-candidature', [OPTION_ajoutCandidatureController::class, 'Traitement_AjoutCandidature_Etape1'])->name('ajoutCandidature.Etape1_GESTION');
 
     //ETAPE 2 : Page de confirmation l'ajout d'une nouvelle offre de stage
-    Route::get('/ajout-candidature/confirmation', [OPTION_ajoutCandidatureController::class, 'Vu_InscriptionAdmin_Etape2'])->name('inscriptionAdmin.Etape2_VU');
+    Route::get('/ajout-candidature/confirmation', [OPTION_ajoutCandidatureController::class, 'Vu_InscriptionAdmin_Etape2'])->name('ajoutCandidature.Etape2_VU');
 
 
 
