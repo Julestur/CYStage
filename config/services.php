@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+     'mailtrap-sdk' => [
+        'host' => env('MAILTRAP_HOST', 'send.api.mailtrap.io'),
+        'apiKey' => env('MAILTRAP_API_KEY'),
+    ],
 ];
