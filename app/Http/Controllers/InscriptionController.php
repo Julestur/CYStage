@@ -58,6 +58,7 @@ class InscriptionController extends Controller
         Session::put('form_inscription', $request->all());
         Session::put('codeVerif', $codeVerif);
 
+        dd(config('services.mailtrap-sdk'));
         // Envoie du message avec Mailable
         Mail::to($email)->send(new VerifCodeMail($codeVerif));
 
