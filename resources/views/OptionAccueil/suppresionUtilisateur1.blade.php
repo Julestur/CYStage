@@ -92,19 +92,17 @@
 
 <script>
 function chargerContenu(choix) {
-    // 1. On récupère la zone à modifier
+    // On récupère la zone à modifier
     const zone = document.getElementById('zoneAffTab');
     if(!zone) return;
 
-    // 2. Effet visuel de chargement (optionnel)
     zone.style.opacity = '0.5';
 
-    // 3. L'appel AJAX
-    // On ajoute un paramètre bidon (&ajax=1) pour aider le serveur si besoin
+
     fetch('?type=' + choix, {
         method: 'GET',
         headers: {
-            'X-Requested-With': 'XMLHttpRequest' // Crucial pour Laravel
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
     .then(response => {
@@ -112,7 +110,7 @@ function chargerContenu(choix) {
         return response.text();
     })
     .then(html => {
-        // 4. On extrait uniquement le tableau du HTML reçu
+        // On extrait uniquement le tableau du HTML reçu
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const nouveauContenu = doc.getElementById('zoneAffTab');
@@ -121,20 +119,19 @@ function chargerContenu(choix) {
             zone.innerHTML = nouveauContenu.innerHTML;
         }
 
-        // 5. On remet l'opacité
+
         zone.style.opacity = '1';
 
-        // 6. Mise à jour visuelle des boutons (sans recharger !)
         document.querySelectorAll('.bouton_choix').forEach(btn => btn.classList.remove('actif'));
         const boutonCible = document.querySelector(`button[onclick*="${choix}"]`);
         if (boutonCible) boutonCible.classList.add('actif');
 
-        // 7. On change l'URL "proprement" sans recharger la page
+
         window.history.pushState(null, '', '?type=' + choix);
     })
     .catch(error => {
         console.error('Erreur AJAX:', error);
-        // En cas d'erreur, on force un rechargement classique pour ne pas bloquer l'utilisateur
+
         window.location.href = '?type=' + choix;
     });
 }
