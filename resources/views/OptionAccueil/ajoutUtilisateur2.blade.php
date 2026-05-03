@@ -11,7 +11,7 @@
                 {{ htmlspecialchars($prenom) }} peut maintenant <span id="surlignage">se connecter</span>.
             </p>
             
-            {{-- Ton script de confettis --}}
+            {{-- script de confettis --}}
             <script src="{{ asset('js/confetti.js') }}"></script>
             
             <div class="bouton-position">
