@@ -47,8 +47,7 @@ class OPTION_ajoutOffreStageController extends Controller
             dd("🚨 LA VALIDATION A ÉCHOUÉ ! Voici l'erreur exacte :", $validator->errors()->all(), "Données envoyées :", $requete->all());
         }
         try {
-            // 2. On insère dans la table 'stage'
-            // VERIFIE BIEN LE NOM DE TES COLONNES DANS phpMyAdmin
+            // On insère dans la table 'stage'
             DB::table('stage')->insert([
                 'intitule'      => $requete->intitule,
                 'dateDebut'     => $requete->dateDebut,
@@ -58,11 +57,10 @@ class OPTION_ajoutOffreStageController extends Controller
                 'created_at'    => now(),
             ]);
 
-            // 3. On redirige vers l'accueil avec un message de succès
+            // On redirige vers l'accueil avec un message de succès
             return redirect()->route('accueil')->with('success', 'Le stage a été ajouté !');
 
         } catch (\Exception $e) {
-            // SI CA NE MARCHE PAS, ce dd() va nous dire exactement pourquoi (ex: colonne manquante)
             dd("Erreur SQL : " . $e->getMessage());
         }
     }
@@ -71,18 +69,15 @@ class OPTION_ajoutOffreStageController extends Controller
     public function Supprimer_Stage($id)
 {
     try {
-        // 1. On lance une transaction (si un truc plante, rien n'est supprimé)
+
         DB::beginTransaction();
 
-        // 2. On supprime d'abord toutes les candidatures liées à ce stage
-        // Cela libère la contrainte de clé étrangère
         DB::table('candidature')->where('idStage', $id)->delete();
 
-        // 3. Maintenant, on peut supprimer le stage sans erreur
         $suppression = DB::table('stage')->where('idStage', $id)->delete();
 
         if ($suppression) {
-            DB::commit(); // On valide définitivement les suppressions
+            DB::commit();
             return redirect()->route('accueil')->with('success', 'Le stage et ses candidatures ont été supprimés !');
         }
 
@@ -90,7 +85,7 @@ class OPTION_ajoutOffreStageController extends Controller
         return redirect()->route('accueil')->with('error', 'Impossible de trouver ce stage.');
 
     } catch (\Exception $e) {
-        DB::rollBack(); // En cas d'erreur SQL, on annule tout
+        DB::rollBack(); 
         return redirect()->route('accueil')->with('error', 'Erreur critique : ' . $e->getMessage());
     }
 }
