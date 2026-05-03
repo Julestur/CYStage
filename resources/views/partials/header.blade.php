@@ -17,7 +17,7 @@
 
             <div id="profil-info">
                 <p>{{ Session::get('prenom') }}</p>
-                <small>{{ Session::get('grade') }}</small> {{-- optionnel, supprime cette ligne si tu ne veux pas afficher le rôle --}}
+                <small>{{ Session::get('grade') }}</small>
             </div>
             
         </div>
