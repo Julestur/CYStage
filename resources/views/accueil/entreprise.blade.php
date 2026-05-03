@@ -45,7 +45,7 @@
         </button>
     </div>
 
-    {{-- Barre latérale --}}
+
     {{-- Barre latérale --}}
     <div id="barreLatérale">
         <div id="contenuBarreLat">
@@ -58,7 +58,7 @@
                 <p><strong>Statut :</strong> <span id="statut"></span></p>
             </div>
             
-            {{-- ✅ Ajout obligatoire pour ne pas faire planter le JS --}}
+
             <div id="infosDynamiques2"></div>
         </div>
     </div>
@@ -86,7 +86,7 @@ function ouvrirBarreLat(bouton) {
     const statutProf       = bouton.getAttribute('info_statut_prof');
     const remarqueProf = bouton.getAttribute('info_remarque_prof');
     
-    // Nouveaux attributs
+
     const idStage     = bouton.getAttribute('info_idstage');
     const cheminCV    = bouton.getAttribute('info_cv'); 
     const cheminLM    = bouton.getAttribute('info_lm');
@@ -156,7 +156,7 @@ function ouvrirBarreLat(bouton) {
 
 
         
-        // Zone des documents (déjà existante dans votre code)
+
         contenu2 = `
             <br><hr><br>
             <h3>Documents du candidat :</h3>
@@ -209,7 +209,7 @@ function ouvrirBarreLat(bouton) {
 
     }
     if (zoneInfos) zoneInfos.innerHTML = contenu;
-    if (zoneInfos2) zoneInfos2.innerHTML = contenu2; //  Injection sécurisée
+    if (zoneInfos2) zoneInfos2.innerHTML = contenu2; 
 
     document.getElementById('barreLatérale').style.width = '500px';
 }
