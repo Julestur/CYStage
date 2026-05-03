@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class OPTION_suppressionUtilisateurController extends Controller
 {
-    // ETAPE 1 : Affichage de la liste avec barre de recherche
+    // Affichage de la liste avec barre de recherche
     public function Vu_SuppressionAdmin_Etape1(Request $request)
     {
         $search = $request->input('search');
@@ -43,7 +43,7 @@ class OPTION_suppressionUtilisateurController extends Controller
         return view('OptionAccueil.suppresionUtilisateur1', compact('donnees', 'type', 'search'));
     }
 
-    // ETAPE 2 : Page de confirmation
+    // Page de confirmation
     public function Vu_SuppressionAdmin_Etape2(Request $request)
     {
         $id = $request->query('id');
@@ -60,7 +60,7 @@ class OPTION_suppressionUtilisateurController extends Controller
         return view('OptionAccueil.suppresionUtilisateur2', compact('item', 'type', 'id', 'nomAffichage'));
     }
 
-    // ETAPE 3 : Traitement de la suppression
+    // Traitement de la suppression
     public function Traitement_SuppressionAdmin_Etape1(Request $request)
     {
         $id = $request->input('id');
