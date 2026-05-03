@@ -14,13 +14,13 @@ class OPTION_changementMDPController extends Controller {
 
 
      public function affichageChangement() {
-        return view('OptionAccueil.change_mdp'); // Vérifie que ce fichier existe dans resources/views/connexion/
+        return view('OptionAccueil.change_mdp'); 
     }
 
     public function changementMDP(Request $requete) {
     
     
-        // Création de messages d'erreurs en frnacais
+        // Création de messages d'erreurs en français
         $messages = [
             'ancien_MDP.required' => 'L\'ancien mot de passe est requis.',
             'MDP.required'         => 'Le nouveau mot de passe est obligatoire.',
