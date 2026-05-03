@@ -162,11 +162,11 @@ class accueilController extends Controller{
     $idUtilisateur = Session::get('id');
 
     $donnees = DB::table('candidature as c')
-        // 1. Liaison avec le stage
+        // Liaison avec le stage
         ->leftJoin('stage as s', 'c.idStage', '=', 's.idStage')
-        // 2. Liaison avec l'entreprise (via le stage)
+        // Liaison avec l'entreprise
         ->leftJoin('entreprise as e', 's.idEntreprise', '=', 'e.idEntreprise')
-        // 3. Liaison avec l'utilisateur (C'EST CETTE LIGNE QUI MANQUAIT)
+        // Liaison avec l'utilisateur
         ->leftJoin('utilisateur as u', 'c.idUtilisateur', '=', 'u.idUtilisateur') 
         ->where('c.idUtilisateur', $idUtilisateur)
         ->select(
