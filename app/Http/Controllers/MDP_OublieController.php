@@ -38,7 +38,7 @@ class MDP_OublieController extends Controller {
     }
 
     public function showResetForm($token, Request $request) {
-        // IMPORTANT : On récupère l'email dans l'URL pour l'envoyer à la vue
+        // On récupère l'email dans l'URL pour l'envoyer à la vue
         $email = $request->query('email');
 
         // On utilise ton nom de fichier : reinitMDP_VU
@@ -96,7 +96,7 @@ if (!$user) {
 
         DB::table('changement_m_d_p')->where('email', $request->email)->delete();
 
-        // Vérifie que ta route de connexion s'appelle bien 'connexion' ou 'login'
+
         return redirect()->route('login')->with('confirmation', 'Mot de passe modifié avec succès !');
     }
 }
