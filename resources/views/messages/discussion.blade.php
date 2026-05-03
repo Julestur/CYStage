@@ -94,7 +94,6 @@
 
 <script>
     let chatActif = {};
-    let intervalActif = null;
     const monId = {{ $idUtilisateur }};
 
     function toggleConversations(idCandidature) {
@@ -113,8 +112,6 @@
 
         chargerMessages(idCandidature);
 
-        /*if (intervalActif) clearInterval(intervalActif);
-        intervalActif = setInterval(() => chargerMessages(idCandidature), 5000);*/
     }
 
     function afficherNomFichier(idCandidature) {
@@ -178,7 +175,7 @@ function envoyerMessage(idCandidature) {
     const fichier = document.getElementById('fichier_' + idCandidature);
     const contenu = input.value.trim();
 
-    // Il faut au moins un message ou un fichier
+
     if (!contenu && !fichier.files[0]) return;
 
     const formData = new FormData();
