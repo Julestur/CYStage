@@ -32,7 +32,7 @@ class OPTION_ajoutUtilisateurController extends Controller
 
 
 
-        // Création de messages d'erreurs en frnacais
+        // Création de messages d'erreurs en français
         $messages = [
             'nom.required'             => 'Le nom est obligatoire.',
             'prenom.required'          => 'Le prénom est obligatoire.',
@@ -62,7 +62,7 @@ class OPTION_ajoutUtilisateurController extends Controller
         
 
 
-        // 2. Détermination du statut (plus propre qu'une série de if)
+        // Détermination du statut 
         $statuts = [
             'admin' => 1,
             'Etudiant' => 2,
@@ -72,12 +72,12 @@ class OPTION_ajoutUtilisateurController extends Controller
         $statutVal = $statuts[$requete->grade] ?? 2;
 
         try {
-            DB::beginTransaction(); // On démarre une transaction
+            DB::beginTransaction(); 
 
             $idEntreprise = null;
             $idClasse = null;
 
-            // 3. Gestion Entreprise (si grade Entreprise)
+            // Gestion Entreprise (si grade Entreprise)
             if ($statutVal == 4 && $requete->filled('nom_entreprise')) {
                 // firstOrCreate cherche si l'entreprise existe, sinon la crée
                 $entreprise = DB::table('entreprise')->where('nom', $requete->nom_entreprise)->first();
@@ -88,7 +88,7 @@ class OPTION_ajoutUtilisateurController extends Controller
                 }
             }
 
-            // 4. Gestion Classe (si grade Etudiant)
+            // Gestion Classe (si grade Etudiant)
             if ($statutVal == 2 && $requete->filled('classe')) {
                 $classe = DB::table('classe')->where('nom', $requete->classe)->first();
                 if ($classe) {
@@ -98,13 +98,13 @@ class OPTION_ajoutUtilisateurController extends Controller
                 }
             }
 
-            // 5. Création de l'utilisateur
+            // Création de l'utilisateur
             DB::table('utilisateur')->insert([
                 'nom' => $requete->nom,
                 'prenom' => $requete->prenom,
                 'email' => $requete->mail,
                 'identifiant' => $requete->pseudo,
-                'mdp' => Hash::make($requete['MDP']), // ON HASHE !
+                'mdp' => Hash::make($requete['MDP']), 
                 'pdp' => 'profil.png',
                 'mdp_tmp' => 'vide',
                 'idStatut' => $statutVal,
@@ -112,13 +112,12 @@ class OPTION_ajoutUtilisateurController extends Controller
                 'idClasse' => $idClasse
             ]);
 
-            DB::commit(); // Tout est bon, on valide en BDD
+            DB::commit(); 
 
-            // On stocke le prénom en session flash juste pour le message de succès
             return view('OptionAccueil.ajoutUtilisateur2', ['prenom' => $requete->prenom]);
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Erreur ? On annule tout
+            DB::rollBack();
             return back()->withErrors(['error' => 'Erreur lors de l\'inscription : ' . $e->getMessage()])->withInput();
         }
     }
