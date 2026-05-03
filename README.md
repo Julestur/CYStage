@@ -158,7 +158,7 @@ cystage/
 │   └── Mail/                # Envoi d'e-mails (vérification, réinit. MDP)
 ├── database/
 │   ├── migrations/          # Structure BDD (utilisateur, stage, candidature…)
-│   └── seeders/             # Données de test (lieu où sont géré les identifiants et mot de passe 
+│   └── seeders/             # Données de test (lieu où sont géré les identifiants et mot de passe) 
 ├── public/
 │   ├── css/                 # Feuilles de style
 │   ├── js/                  # Scripts 
