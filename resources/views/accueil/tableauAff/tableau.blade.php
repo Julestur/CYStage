@@ -27,7 +27,6 @@
         <thead>
             <tr>
                 @if($choix == 'etudiant') <th>Nom</th><th>Email</th><th>Classe</th>
-                {{-- Ligne corrigée ci-dessous --}}
                 @elseif($choix == 'stage' || $choix == 'mes_offres') <th>Titre</th><th>Entreprise</th><th>Début</th>
                 @elseif($choix == 'candidatures') <th>Titre</th><th>Entreprise</th><th>Candidat</th><th>Statut</th>
                 @elseif($choix == 'prof') <th>Nom</th><th>Email</th>
@@ -41,7 +40,6 @@
             @foreach($donnees as $l)
             <tr>
                 @if($choix == 'etudiant') <td>{{ $l->nom }} {{ $l->prenom }}</td><td>{{ $l->email }}</td><td>{{ $l->nomClasse }}</td>
-                {{-- Lignes corrigées ci-dessous avec l'opérateur ?? pour éviter l'erreur Undefined property --}}
                 @elseif($choix == 'stage' || $choix == 'mes_offres') <td>{{ $l->intitule }}</td><td>{{ $l->nomEntreprise ?? 'Mon entreprise' }}</td><td>{{ $l->dateDebut }}</td>
                 @elseif($choix == 'candidatures')
                 <td>{{ $l->intitule }}</td>
@@ -91,7 +89,6 @@
                             info_verif_convention_prof="{{ $l->estVerif_Convention_Prof ?? 0 }}"
                         @endif
 
-                        {{-- Ligne corrigée ci-dessous --}}
                         @if($choix == 'stage' || $choix == 'mes_offres')
                             info_description="{{ $l->detail ?? 'Aucune description disponible.' }}"
                         @endif>
