@@ -97,14 +97,37 @@ php artisan db:seed
 
 ---
 
+### Étape 6 — Créer le lien symbolique pour les fichiers de stockage
 
-### Étape 6 — Lancer le serveur de développement
+```bash
+php artisan storage:link
+```
+
+---
+
+### Étape 7 — Lancer le serveur de développement
 
 ```bash
 php artisan serve
 ```
 
 > ✅ Le site est accessible sur **[http://localhost:8000](http://localhost:8000)**
+
+---
+
+## 📊 Identifiants de connexion
+
+Utilisez les identifiants suivants pour tester l'application :
+
+| Profil | Identifiant | Mot de passe |
+|--------|-------------|--------------|
+| Admin | Admin | Admin |
+| Étudiant 1 | Esteban | Esteban |
+| Étudiant 2 | Tilio | Tilio |
+| Étudiant 3 | Jules | Jules |
+| Étudiant 4 | Etudiant | Etudiant |
+| Professeur | Prof | Prof |
+| Entreprise | Entreprise | Entreprise |
 
 ---
 
