@@ -32,12 +32,11 @@ class OPTION_changementPDPController extends Controller {
         if ($requete->hasFile('photo_profil')) {
             $file = $requete->file('photo_profil');
             
-            // 2. Nommer le fichier (pseudo + timestamp)
+            // Nommer le fichier (pseudo + timestamp)
             $extension = $file->getClientOriginalExtension();
             $nomFichier = $pseudo . "_" . time() . "." . $extension;
 
-            // 3. Gestion de l'ancienne photo
-            // On suppose que tes photos sont dans public/images_profil/
+
             if (session('photo-profil') && session('photo-profil') != 'profil.png') {
                 $ancienChemin = public_path('images_profil/' . session('photo-profil'));
                 if (file_exists($ancienChemin)) {
@@ -45,15 +44,15 @@ class OPTION_changementPDPController extends Controller {
                 }
             }
 
-            // 4. Déplacement vers le dossier public
+            // Déplacement vers le dossier public
             $file->move(public_path('images_profil'), $nomFichier);
 
-            // 5. Mise à jour de la Base de Données (Query Builder comme ton CSV)
+            // Mise à jour de la Base de Données 
             DB::table('utilisateur')
                 ->where('idUtilisateur', $utilisateurID)
                 ->update(['pdp' => $nomFichier]);
 
-            // 6. Mise à jour de la Session
+            // Mise à jour de la Session
             session(['photo-profil' => $nomFichier]);
 
             return back()->with('confirmation', 'Votre photo de profil a été mise à jour !');
