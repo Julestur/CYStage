@@ -23,12 +23,12 @@ class AuthController extends Controller
 }
 
 
-// À ajouter dans AuthController.php
+
 public function logout() {
-    // 1. On vide la session Laravel
+    // On vide la session Laravel
     Session::flush();
     
-    // 2. On redirige vers la page de connexion
+    // On redirige vers la page de connexion
     return redirect()->route('login');
 }
 
@@ -40,8 +40,7 @@ public function logout() {
         $idSaisi = $request->input('pseudo');
         $mdpSaisi = $request->input('mot-de-passe');
 
-        // 2. Chercher l'utilisateur (identifiant ou email)
-        // On fait la même jointure que toi pour avoir le 'libelle' du statut
+        // Cherche l'utilisateur (identifiant ou email)
         $user = DB::table('utilisateur as u')
             ->leftJoin('statut as s', 'u.idStatut', '=', 's.idStatut')
             ->where('u.identifiant', $idSaisi)
@@ -50,14 +49,14 @@ public function logout() {
             ->first();
 
         if ($user) {
-                // 3. Vérification du mot de passe (Normal ou Temporaire)
+                // Vérification du mot de passe (Normal ou Temporaire)
             if (Hash::check($mdpSaisi, $user->mdp)) {
                 $this->creerSession($user);
-                return redirect('accueil'); // Remplace accueil.php
+                return redirect('accueil'); 
             } 
             elseif (!empty($user->mdp_tmp) && $mdpSaisi === $user->mdp_tmp) {
                 $this->creerSession($user);
-                return redirect('/changer-mdp-temp'); // Ta page de changement
+                return redirect('/changer-mdp-temp'); 
             }
         }
 
