@@ -276,23 +276,31 @@
       <code>
         <span class="tree-dir">cystage/</span><br>
         ├── <span class="tree-dir">app/</span><br>
-        │   ├── <span class="tree-dir">Http/Controllers/</span>   <span class="tree-desc"># Auth, inscription, accueil, profil…</span><br>
+        │   ├── <span class="tree-dir">Http/Controllers/</span>    <span class="tree-desc"># Auth, inscription, accueil, profil…</span><br>
         │   ├── <span class="tree-dir">Models/</span>              <span class="tree-desc"># Modèles Eloquent (User…)</span><br>
         │   └── <span class="tree-dir">Mail/</span>                <span class="tree-desc"># Envoi d'e-mails (vérification, réinit. MDP)</span><br>
         ├── <span class="tree-dir">database/</span><br>
         │   ├── <span class="tree-dir">migrations/</span>          <span class="tree-desc"># Structure BDD (utilisateur, stage, candidature…)</span><br>
-        │   └── <span class="tree-dir">seeders/</span>             <span class="tree-desc"># Données de test</span><br>
+        │   └── <span class="tree-dir">seeders/</span>             <span class="tree-desc"># Données de test (lieu où sont géré les identifiants et mot de passe)</span><br>
         ├── <span class="tree-dir">public/</span><br>
         │   ├── <span class="tree-dir">css/</span>                 <span class="tree-desc"># Feuilles de style</span><br>
         │   ├── <span class="tree-dir">js/</span>                  <span class="tree-desc"># Scripts </span><br>
         │   └── <span class="tree-dir">Images/</span>              <span class="tree-desc"># Images</span><br>
-        ├── <span class="tree-dir">resources/views/</span>         <span class="tree-desc"># Vues Blade (pages, layouts, partials)</span><br>
+        ├── <span class="tree-dir">resources/views/</span>         <span class="tree-desc"># Vues Blade (pages de chaque profil, message, layouts, partials)</span><br>
+        │   ├── <span class="tree-dir">acceuil/</span>             <span class="tree-desc"># de chaque profil</span><br>
+        │   ├── <span class="tree-dir">connexion/</span>           
+        │   ├── <span class="tree-dir">gestionMDP/</span>             
+        │   ├── <span class="tree-dir">Mail/</span>   
+        │   ├── <span class="tree-dir">messages/</span> 
+        │   └── <span class="tree-dir">partials/</span>
+        ├── <span class="tree-dir">storage/</span><br>             <span class="tree-desc"># zone de stockage</span><br>
+        │   ├── <span class="tree-dir">app/</span>                 <span class="tree-desc"># de l'application</span><br>
+        │   ├── <span class="tree-dir">framework/ </span>          <span class="tree-desc"># de Laravel </span><br>
         └── <span class="tree-dir">routes/</span><br>
         &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="tree-file">web.php</span>              <span class="tree-desc"># Toutes les routes de l'application</span>
       </code>
     </div>
   </div>
-
 </div>
 
 
