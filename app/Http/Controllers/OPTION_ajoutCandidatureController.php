@@ -31,7 +31,7 @@ class OPTION_ajoutCandidatureController extends Controller
     public function Traitement_AjoutCandidature_Etape1(Request $requete){
 
 
-        // Création de messages d'erreurs en frnacais
+        // Création de messages d'erreurs en français
         $messages = [
             'nom.required'             => 'Le nom est obligatoire.',
             'prenom.required'          => 'Le prénom est obligatoire.',
