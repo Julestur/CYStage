@@ -181,6 +181,6 @@ cystage/
 
 <div align="center">
 
-**CYStage** · Projet scolaire · CY Tech
+**CYStage** - Projet scolaire - Equipe 3 - EHRMANN_PRETO_TURCHI - CY Tech
 
 </div>
