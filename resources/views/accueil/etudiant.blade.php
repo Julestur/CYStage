@@ -117,7 +117,7 @@ function ouvrirBarreLat(bouton) {
     let contenu = ""; 
     let contenu2 = ""; 
 
-    // Logique selon le type d'élément cliqué
+
     if (type === 'stage') {
 
         zoneTitre.innerText = intitule;
@@ -185,7 +185,6 @@ function ouvrirBarreLat(bouton) {
                 </div><br>`;
 
 
-        // Uniquement si acceptée des deux côtés
         if (statutEntreprise == 1 && statutProf == 1) {
             contenu2 += `
                <hr>
